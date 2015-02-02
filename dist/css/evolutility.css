@@ -2,7 +2,7 @@
  *  evolutility
  *
  *  https://github.com/evoluteur/evolutility
- *  (c) 2014, Olivier Giulieri
+ *  (c) 2015, Olivier Giulieri
 */
 .evo-toolbar {
   border: 1px solid #bce8f1;
@@ -26,7 +26,7 @@
 }
 .evo-toolbar [data-id="prev"].nav-disabled a,
 .evo-toolbar [data-id="next"].nav-disabled a {
-  color: #c0c0c0;
+  color: silver;
 }
 .evo-toolbar [data-id="prev"].nav-disabled a:hover,
 .evo-toolbar [data-id="next"].nav-disabled a:hover {
@@ -108,7 +108,7 @@
   background-color: #fbfbfb;
 }
 label {
-  font-weight: 500 !important;
+  font-weight: 500;
   margin-bottom: 2px;
 }
 .help-block {
@@ -379,6 +379,10 @@ label {
 }
 .evol-xpt-preview textarea {
   min-height: 200px;
+}
+.evol-xpt-more {
+  display: block;
+  margin-top: 10px;
 }
 .evol-xpt-more-fields {
   clear: both;

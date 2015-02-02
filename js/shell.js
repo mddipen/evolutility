@@ -3,7 +3,7 @@
  * evolutility :: shell.js
  *
  * https://github.com/evoluteur/evolutility
- * Copyright (c) 2014, Olivier Giulieri
+ * Copyright (c) 2015, Olivier Giulieri
  *
  *************************************************************************** */
 
@@ -173,7 +173,7 @@ Evol.Shell = Backbone.View.extend({
                         collection: ms,
                         collectionClass: Ms,
                         uiModel: uiModel,
-                        pageSize: 20,
+                        pageSize: that.pageSize,
                         titleSelector: '#title',
                         style: that.style
                     };

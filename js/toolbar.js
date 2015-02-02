@@ -3,7 +3,7 @@
  * evolutility :: toolbar.js
  *
  * https://github.com/evoluteur/evolutility
- * Copyright (c) 2014, Olivier Giulieri
+ * Copyright (c) 2015, Olivier Giulieri
  *
  *************************************************************************** */
 
@@ -255,6 +255,7 @@ return Backbone.View.extend({
                         break;
                     // --- actions ---
                     case 'export':
+                        config.sampleMaxSize = config.pageSize;
                         vw = new Evol.ViewAction.Export(config).render();
                         $v.addClass('panel panel-info')
                             .slideDown();
@@ -522,6 +523,10 @@ return Backbone.View.extend({
             return this.curView.getData(skipReadOnlyFields);
         }
         return null;
+    },
+
+    getCollection:function(){
+        return this._curCollec();
     },
 
     setModelById: function(id){

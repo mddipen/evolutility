@@ -5,7 +5,7 @@
  * View one view (readonly)
  *
  * https://github.com/evoluteur/evolutility
- * Copyright (c) 2014, Olivier Giulieri
+ * Copyright (c) 2015, Olivier Giulieri
  *
  *************************************************************************** */
 
@@ -44,6 +44,9 @@ Evol.ViewOne.View = Evol.ViewOne.extend({
                         case fts.url:
                         case fts.html:
                             $f.html(HTMLField4Many(f, fv, Evol.hashLov, iconsPath));
+                            break;
+                        case fts.formula:
+                            $f.html(f.formula(model));
                             break;
                         case fts.pix:
                             $f.html((fv)?('<img src="'+iconsPath+fv+'" class="img-thumbnail">'):('<p>'+Evol.i18n.nopix+'</p>'));

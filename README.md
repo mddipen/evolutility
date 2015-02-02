@@ -9,6 +9,18 @@ With it you configure views with metadata instead of hand-coding templates, Java
 [AddressBook](http://evoluteur.github.io/evolutility/demo/index.html#contact/list),
 [Wine Cellar](http://evoluteur.github.io/evolutility/demo/index.html#winecellar/list).
 
+## Installation
+
+You can use Bower to install Evolutility.
+
+```bash
+# To get the latest stable version, use Bower from the command line.
+bower install evolutility
+
+# To get the most recent, latest committed-to-master version use:
+bower install evolutility#master
+```
+
 ## Views
 
 Evolutility's views have a Backbone model (to define the data) and also a UI-model (to define the UI for this model).
@@ -189,7 +201,7 @@ Evolutility.js is a re-write of [Evolutility] (http://www.evolutility.org) gener
 
 ## License
 
-Copyright (c) 2014 Olivier Giulieri.
+Copyright (c) 2015 Olivier Giulieri.
 
 Evolutility.js is released under the GNU Affero General Public License version 3 [GNU AGPLv3](http://www.gnu.org/licenses/agpl-3.0.html).
 

@@ -5,7 +5,7 @@
  * View many badges
  *
  * https://github.com/evoluteur/evolutility
- * Copyright (c) 2014, Olivier Giulieri
+ * Copyright (c) 2015, Olivier Giulieri
  *
  *************************************************************************** */
 
@@ -49,7 +49,20 @@ Evol.ViewMany.Badges = Evol.ViewMany.extend({
                 v = that._HTMLField(f, model.escape(f.attribute || f.id));
             }
             if (idx === 0) {
-                h.push('<div data-mid="', model.id, '"><h4>',
+                h.push('<div data-mid="', model.id, '">');
+                // Item badge
+                var bf=that.uiModel.badgefield;
+                if(bf){
+                    h.push('<span class="badge pull-right">');
+                    if(_.isFunction(bf)){
+                        h.push(bf(model));
+                    }else if(_.isString(bf)){
+                        h.push(model.escape(bf));
+                    }
+                    h.push('</span>');
+                }
+                // Item title
+                h.push('<h4>',
                     selectable?that._HTMLCheckbox(model.id):'',
                     Evol.Dico.HTMLFieldLink('fg-'+f.id, f, v, icon, !link, route?route+model.id:null),
                     '</h4></div>');
