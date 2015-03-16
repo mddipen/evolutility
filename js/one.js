@@ -2,7 +2,7 @@
  *
  * evolutility :: one.js
  *
- * View one
+ * View "one" for other ViewOne views to inherit from.
  *
  * https://github.com/evoluteur/evolutility
  * Copyright (c) 2015, Olivier Giulieri
@@ -21,6 +21,7 @@ Evol.ViewOne = function(){
 
 return Backbone.View.extend({
 
+    viewName: 'One',
     viewType:'one',
     cardinality: '1',
     editable: true,
@@ -73,7 +74,7 @@ return Backbone.View.extend({
 
     getFields: function (){
         if(!this._fields){
-            this._fields=eDico.getFields(this.uiModel, this.getFieldsCondition);
+            this._fields=eDico.getFields(this.uiModel, this.fieldsetFilter);
             this._fieldHash={};
             var that=this;
             _.each(this._fields, function(f){
@@ -492,7 +493,7 @@ return Backbone.View.extend({
 
     _renderButtons: function (h, mode) {
         h.push(eUI.html.clearer,
-            '<div class="evol-buttons">',
+            '<div class="evol-buttons panel panel-info">',
             eUI.button('cancel', i18n.bCancel, 'btn-default'),
             eUI.button('save', i18n.bSave, 'btn-primary'));
         if (this.model && this.model.isNew() && this.button_addAnother && mode!=='json') {
@@ -715,7 +716,9 @@ return Backbone.View.extend({
             fv = (mode !== 'new') ? this.model.get(f.id) : f.defaultvalue || '';
         }
         if(f.type==='formula'){
-            h.push('<div id="',this.fieldViewId(f.id), '" class="disabled evo-rdonly">', f.formula(this.model), '</div>');
+            h.push('<div id="',this.fieldViewId(f.id), '" class="disabled evo-rdonly evol-truncate">', 
+                (this.model?f.formula(this.model):''), 
+                '</div>');
         }else{
             h.push(eDico.HTMLField4One(f, this.fieldViewId(f.id), fv, mode, iconsPath));
         }

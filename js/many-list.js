@@ -2,7 +2,7 @@
  *
  * evolutility :: many-list.js
  *
- * View many list
+ * View "many list" to display a collection as a list (table w/ sorting and paging).
  *
  * https://github.com/evoluteur/evolutility
  * Copyright (c) 2015, Olivier Giulieri
@@ -12,6 +12,10 @@
 Evol.ViewMany.List = Evol.ViewMany.extend({
 
     viewName: 'list',
+    
+    fieldsetFilter: function (f) {
+        return f.viewmany || f.viewlist;
+    },
 
     _render: function (models) {
         var h = [],
@@ -44,7 +48,7 @@ Evol.ViewMany.List = Evol.ViewMany.extend({
     HTMLItem: function(h, fields, model, icon, selectable, route){
         var that = this,
             v,
-            bf = that.uiModel.badgefield,
+            bf = that.uiModel.badge,
             link = (this.links!==false),
             ft = Evol.Dico.fieldTypes;
 

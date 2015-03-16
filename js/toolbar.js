@@ -2,6 +2,8 @@
  *
  * evolutility :: toolbar.js
  *
+ * View "toolbar" (one toolbar instance manages all views for a UI model).
+ *
  * https://github.com/evoluteur/evolutility
  * Copyright (c) 2015, Olivier Giulieri
  *
@@ -16,6 +18,7 @@ Evol.viewClasses = {
     // --- Many ---
     'list': Evol.ViewMany.List,
     'cards': Evol.ViewMany.Cards,
+    //'bubbles': Evol.ViewMany.Bubbles,
     'charts': Evol.ViewMany.Charts,
     // --- Action ---
     'filter': Evol.ViewAction.Filter,
@@ -41,6 +44,7 @@ return Backbone.View.extend({
         'action >div': 'action_view',
         'status >div': 'status_update',
         'change.filter >div': 'change_filter',
+        'close.filter >div': 'hideFilter',
         'click .alert-dismissable>button': 'clearMessage',
         'message >div':'showMessage'
     },
@@ -52,27 +56,40 @@ return Backbone.View.extend({
         style: 'panel-info',
         display: 'label', // tooltip, text, icon, none
         titleSelector: '#title',
+        pageSize:20,
         buttons: {
-            // --- views for one ---
-            view: true,
-            edit: true,
-            mini: true,
-            //wiz: false,
-            json: true,
-            // --- views for many ---
-            list: true,
-            cards: true,
-            charts: true,
-            // --- actions ---
-            'new': true,
-            'save':true,
-            del: true,
-            filter: true,
-            'export': true
-            //group: false,
-            //customize: false
-        },
-        pageSize:20
+            always:[
+                {id: 'list', label: i18n.bList, icon:'th-list', n:'x'},
+                {id: 'new', label: i18n.bNew, icon:'plus', n:'x'}
+            ],
+                //linkOpt2h('selections','','star');
+            actions:[
+                {id:'edit', label: i18n.bEdit, icon:'edit', n:'1'},
+                {id:'save', label: i18n.bSave, icon:'floppy-disk', n:'1'},
+                {id:'del', label: i18n.bDelete, icon:'trash', n:'1'},
+                {id:'filter', label: i18n.bFilter, icon:'filter',n:'n'},
+                //{id:'group',label: i18n.bGroup, icon:'resize-horizontal',n:'n'},
+                {id:'export', label: i18n.bExport, icon:'cloud-download',n:'n'}
+                //{id:'cog',label: i18n.bSettings, icon:'cog',n:'n'}
+            ],
+            prevNext:[
+                {id:'prev', label: '', icon:'chevron-left', n:'x'},
+                {id:'next', label: '', icon:'chevron-right', n:'x'}
+            ],
+            views: [
+                // -- views ONE ---
+                {id:'view', label: i18n.bView, icon:'file',n:'1'},// // ReadOnly
+                {id:'edit', label: i18n.bEdit, icon:'th',n:'1'},// // All Fields
+                {id:'mini', label: i18n.bMini, icon:'th-large',n:'1'},// // Important Fields only
+                //{id:'wiz',label: i18n.bWizard, icon:'arrow-right',n:'1'},
+                {id:'json', label: i18n.bJSON, icon:'barcode',n:'1'},
+                // -- views MANY ---
+                {id:'list', label: i18n.bList, icon:'th-list',n:'n'},
+                {id:'cards', label: i18n.bCards, icon:'th-large',n:'n'},
+                //{id:'bubbles', label: i18n.bBubbles, icon:'adjust',n:'n'},
+                {id:'charts', label: i18n.bCharts, icon:'stats',n:'n'}
+            ]
+        }
     },
 
     initialize: function (opts) {
@@ -94,47 +111,33 @@ return Backbone.View.extend({
         var h='',
             that=this,
             eUIm=eUI.menu,
+            tb=this.buttons,
             endMenu='</ul></li>',
             menuDevider='<li class="divider" data-cardi="1"></li>',
             menuDeviderH='<li class="divider-h"></li>';
 
-        function linkOpt2h (id, label, icon, cardi){
-            if(that.buttons[id]){
-                h+=eUIm.hItem(id, label, icon, cardi);
-            }
+        function menuItem (m){
+            h+=eUIm.hItem(m.id, m.label, m.icon, m.n);
+        }
+        function menuItems (ms){
+            _.forEach(ms, function(m){
+                menuItem(m);
+            });
         }
 
         h+='<div class="evo-toolbar"><ul class="nav nav-pills pull-left" data-id="main">';
-        linkOpt2h('list','','th-list','x'); // linkOpt2h('list',i18n.bAll,'th-list');
-        linkOpt2h('new','','plus'); // linkOpt2h('new',i18n.bNew,'plus');
+        menuItems(tb.always);
         h+=menuDeviderH;
-        linkOpt2h('edit',i18n.bEdit,'pencil','1');
-        linkOpt2h('save',i18n.bSave,'floppy-disk','1');
-        linkOpt2h('del',i18n.bDelete,'trash','1');
-        linkOpt2h('filter',i18n.bFilter,'filter','n');
-        //linkOpt2h('group','Group','resize-horizontal','n');
-        linkOpt2h('charts',i18n.bCharts,'stats','n');
-        linkOpt2h('export',i18n.bExport,'cloud-download','n');
-        //linkOpt2h('selections','','star');
+        menuItems(tb.actions);
         if(this.toolbar){
             h+='</ul><ul class="nav nav-pills pull-right" data-id="views">'+
-                '<li class="evo-tb-status" data-cardi="n"></li>'+
-                eUIm.hItem('prev','','chevron-left','x')+
-                eUIm.hItem('next','','chevron-right','x');
-
-            h+=eUIm.hBegin('views','li','eye-open');
-            linkOpt2h('view','View','file','1');
-            linkOpt2h('edit','Edit','th','1'); // All Fields
-            linkOpt2h('mini','Mini','th-large','1'); // Important Fields only
-            linkOpt2h('wiz','Wizard','arrow-right','1');
-            linkOpt2h('json','JSON','barcode','1');
-            h+=menuDevider;
-            linkOpt2h('list','List','th-list','x');
-            linkOpt2h('cards','Cards','th-large','x');
-            linkOpt2h('charts','Charts','stats','x');
-            h+=eUIm.hEnd('li');
-
-            //linkOpt2h('customize','','wrench', '1', 'Customize');
+                '<li class="evo-tb-status" data-cardi="n"></li>';
+            //h+=eUIm.hBegin('views','li','eye-open');
+            menuItems(tb.prevNext);
+            h+=menuDeviderH;
+            menuItems(tb.views);
+            //h+=menuDeviderH;
+            //h+=eUIm.hItem('customize','','wrench', 'x', 'Customize');
             /*
              if(this.buttons.customize){
                  h+=beginMenu('cust','wrench');
@@ -188,8 +191,7 @@ return Backbone.View.extend({
                 }
                 vw=this.viewsHash[viewName];
                 if(vw.setCollection){
-                    vw.setCollection(collec)
-                        .render();
+                    vw.setCollection(collec);
                 }
                 if(this.model && !this.model.isNew()){
                     if(vw.setModel){
@@ -238,40 +240,38 @@ return Backbone.View.extend({
                 this.$('[data-id="new"]').show();
                 this.$('[data-id="views"] > li').removeClass('evo-sel')
                     .filter('[data-id="'+viewName+'"]').addClass('evo-sel');
-                switch(viewName){
-                    // --- many ---
-                    case 'charts':
-                    case 'cards':
-                    case 'list':
-                        vw = new Evol.viewClasses[viewName](config)
-                            .render();
-                        this._prevViewMany=viewName;
-                        vw.setTitle();
-                        if(viewName!='charts' && this.pageIndex > 0){
-                            //var pIdx=this.curView.getPage();
-                            vw.setPage(this.pageIndex || 0);
-                        }
-                        //this.$el.trigger('status', this.pageSummary(pageIdx, pSize, this.collection.length));
-                        break;
-                    // --- actions ---
-                    case 'export':
-                        config.sampleMaxSize = config.pageSize;
-                        vw = new Evol.ViewAction.Export(config).render();
-                        $v.addClass('panel panel-info')
-                            .slideDown();
-                        break;
-                    // --- one --- view, edit, mini, json, wiz
-                    default :
-                        var vwPrev = null,
-                            cData;
-                        if(vw && vw.editable){
-                            vwPrev = vw;
-                            cData=vw.getData();
-                        }
-                        vw = new Evol.viewClasses[viewName](config).render();
-                        this._prevViewOne=viewName;
-                        this._keepTab(viewName);
-                        break;
+                if(Evol.Dico.viewIsMany(viewName)){
+                    //fieldsetFilter
+                    vw = new Evol.viewClasses[viewName](config)
+                        .render();
+                    this._prevViewMany=viewName;
+                    vw.setTitle();
+                    if(viewName!='charts' && viewName!='bubbles' && this.pageIndex > 0){
+                        //var pIdx=this.curView.getPage();
+                        vw.setPage(this.pageIndex || 0);
+                    }
+                }else{
+                    switch(viewName){
+                        // --- actions ---
+                        case 'export':
+                            config.sampleMaxSize = config.pageSize;
+                            vw = new Evol.ViewAction.Export(config).render();
+                            $v.addClass('panel panel-info')
+                                .slideDown();
+                            break;
+                        // --- one --- view, edit, mini, json, wiz
+                        default :
+                            var vwPrev = null,
+                                cData;
+                            if(vw && vw.editable){
+                                vwPrev = vw;
+                                cData=vw.getData();
+                            }
+                            vw = new Evol.viewClasses[viewName](config).render();
+                            this._prevViewOne=viewName;
+                            this._keepTab(viewName);
+                            break;
+                    }
                 }
                 if(_.isUndefined(vw)){
                     //TODO error tracking (in other places too)
@@ -387,7 +387,7 @@ return Backbone.View.extend({
                 del: lis.filter('[data-id="del"]'),
                 save: lis.filter('[data-id="save"]'),
                 prevNext: this.$('.evo-toolbar [data-id="prev"],.evo-toolbar [data-id="next"]'),
-                //customize: this.$('.evo-toolbar a[data-id="customize"]').parent(),
+                customize: this.$('.evo-toolbar a[data-id="customize"]').parent(),
                 views: vw,
                 viewsIcon: this.$('.glyphicon-eye-open,.glyphicon-eye-close'),
                 vws: vw.find('ul>li>a')
@@ -412,17 +412,17 @@ return Backbone.View.extend({
             tbBs.prevNext.hide();//.removeClass('nav-disabled');
             setVisible(tbBs.views, !(mode==='export' || mode=='new'));
             tbBs.del.hide();
-            var cssOpen='glyphicon-eye-open',
+            /*var cssOpen='glyphicon-eye-open',
                 cssClose='glyphicon-eye-close';
             if(mode==='mini' || mode==='json'){
                 tbBs.viewsIcon.removeClass(cssOpen).addClass(cssClose);
             }else{
                 tbBs.viewsIcon.removeClass(cssClose).addClass(cssOpen);
-            }
-            if(mode==='cards' || mode==='list' || mode==='charts'){
+            }*/
+            if(Evol.Dico.viewIsMany(mode)){
                 this._prevViewMany=mode;
                 oneMany(mode, false, true);
-                if(mode==='charts'){
+                if(mode==='charts' || mode==='bubbles'){
                     this.setStatus('');
                 }else{
                     var cSize=this.collection.length,
@@ -469,24 +469,24 @@ return Backbone.View.extend({
                     uiModel: this.uiModel
                 }).render();
                 $ff.on('change.filter', function(){
-                    that.curView.setFilter(that._filters.val())
-                        .render();
+                    that.curView.setFilter(that._filters.val());
+                    if(that.curView.viewName!=='bubbles'){
+                        that.curView.render();
+                    }
                 });
-                this._filterOn=true;
-            }else{
-                return this;
             }
         }else{
             this._filters.$el.show(); //.slideDown();
         }
+        this._filterOn=true;
         return this;
     },
 
-    hideFilter: function(){
+    hideFilter: function(evt){
         if(this._filters){
             this._filters.$el.hide(); //.fadeOut(300);
-            this._filterOn=false;
         }
+        this._filterOn=false;
         return this;
     },
 
@@ -495,8 +495,8 @@ return Backbone.View.extend({
     },
 
     toggleFilter: function(){
-        this._filtersOn=!this._filtersOn;
-        return this._filtersOn?this.showFilter(true):this.hideFilter();
+        this._filterOn=!this._filterOn;
+        return this._filterOn?this.showFilter(true):this.hideFilter();
     },
 
     /*
@@ -924,8 +924,7 @@ return Backbone.View.extend({
         }
         this._flagFilterIcon(fvs.length);
         this.pageIndex=0;
-        this.curView.setCollection(collec)
-            .render();
+        this.curView.setCollection(collec);
         this.updateNav();
         this._trigger('filter.change');
     }

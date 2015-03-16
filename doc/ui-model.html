@@ -16,12 +16,14 @@
     <ul class="evo-head-links">
         <li><a href="../demo/index.html">demo</a></li>
         <li><a href="../doc/index.html" class="sel">doc</a></li>
-        <li><a href="https://github.com/evoluteur/evolutility" target="_new">GitHub</a></li>
-    </ul>
-    <ul class="evo-head-links2">
-        <li><a href="views.html">views</a></li>
-        <li><a href="ui-model.html" class="sel">ui-model</a></li>
-        <li><a href="controller.html">controller</a></li>
+        <li class="evo-link2">
+            <ul class="evo-head-links2">
+                <li><a href="views.html">views</a></li>
+                <li><a class="sel" href="ui-model.html">ui-model</a></li>
+                <li><a href="controller.html">controller</a></li>
+            </ul>
+        </li>
+        <li class="spaced"><a href="https://github.com/evoluteur/evolutility" target="_new">GitHub</a></li>
     </ul>
     <div class="clearfix"></div>
 </div>
@@ -100,7 +102,7 @@
         </td>
     </tr>
     <tr>
-        <td>badgefield</td>
+        <td>badge</td>
         <td>id of the field to display as a badge near the items' title. Can also be a function taking model as a parameter.
             <br/>Example: badgefield = &quot;price&quot;</td>
     </tr>
@@ -169,6 +171,12 @@
             </td>
         </tr>
         <tr>
+            <td>labeltrue, labelfalse
+            </td>
+            <td>Only applies to boolean fields. Displayed value for true or false in charts (may be used in other places in the future).
+            </td>
+        </tr>
+        <tr>
             <td>defaultvalue
             </td>
             <td>Default value for the field when creating a new record.
@@ -210,6 +218,13 @@
 
         <tr>
             <th colspan="2">Layout</th>
+        </tr>
+        <tr>
+            <td>typechart<span class="evol-asterix">*</span>
+            </td>
+            <td>Type of chart used for this fields (in Charts view). Possible values: Pie, vBar, hBar (more later).
+                <br>Note: Only applies for fields which supports charts (fields of type boolean, integer, money, lov).
+            </td>
         </tr>
         <tr>
             <td >css<span class="evol-asterix">*</span>
@@ -416,6 +431,12 @@
             </td>
         </tr>
         <tr>
+            <td>label2<span class="evol-asterix">*</span>
+            </td>
+            <td>Panel sub-title.
+            </td>
+        </tr>
+        <tr>
             <td>optional<span class="evol-asterix">*</span>
             </td>
             <td>
@@ -444,7 +465,7 @@
 <section>
         <h1>panel-list</h1>
 
-    <p>Similar to a panel but used to display a sub-collection (an array of objects).</p>
+    <p>Similar to a panel but used to display a sub-collection (an array of objects). It is the "details" part in a "master-details" (and can have multiple details).</p>
 
     <table class="table table-bordered">
         <tbody>
@@ -455,6 +476,12 @@
         <tr>
             <td style="width: 120px; ">id<span class="evol-required">*</span></td>
             <td>Panel Id in the UI.</td>
+        </tr>
+        <tr>
+            <td>badge<span class="evol-asterix">*</span>
+            </td>
+            <td>Field name or function which value is displayed as a badge in the panel header.
+            </td>
         </tr>
         <tr>
             <td>css
@@ -480,6 +507,12 @@
             <td>label
             </td>
             <td>Panel title.
+            </td>
+        </tr>
+        <tr>
+            <td>label2<span class="evol-asterix">*</span>
+            </td>
+            <td>Panel sub-title.
             </td>
         </tr>
         <tr>

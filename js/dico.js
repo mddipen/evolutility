@@ -11,18 +11,45 @@
 
 var Evol = Evol || {};
 
+// not a "virtual DOM" but an "abstract DOM"
 Evol.Dico = function(){
 
     var eUI = Evol.UI,
         uiInput = eUI.input,
-        i18n = Evol.i18n;
+        i18n = Evol.i18n,
+        fts={
+            text: 'text',
+            textml: 'textmultiline',
+            bool: 'boolean',
+            int: 'integer',
+            dec: 'decimal',
+            money: 'money',
+            date: 'date',
+            datetime: 'datetime',
+            time: 'time',
+            lov: 'lov',
+            list: 'list', // many values for one field (behave like tags - return an array of strings)
+            //html:'html',
+            formula:'formula',
+            email: 'email',
+            pix: 'image',
+            doc:'document',
+            url: 'url',
+            color: 'color',
+            hidden: 'hidden'
+            //json: 'json',
+            //rating: 'rating',
+            //widget: 'widget'
+        };
 
 return {
 
-    // enum of supported field types
     fieldTypes: fts,
 
     fieldOneEdit: {// h, f, fid, fv, iconsPath
+        field: function (h, f, fType, fid, fv) {
+            h.push(uiInput[fType](fid, fv, f, null));
+        },
         text: function (h, f, fid, fv) {
             h.push(uiInput.text(fid, fv, f, null));
         },
@@ -95,7 +122,7 @@ return {
             h.push(uiInput.hidden(fid, fv));
         },
         formula: function(h, f, fid, fv){
-            h.push(uiInput.text(fid, fv, f, null));
+            h.push('<div class="evol-truncate">'+uiInput.text(fid, fv, f, null)+'</div>');
         }
     },
 
@@ -128,7 +155,10 @@ return {
         },
         // -- contains
         'ct': function(fv, cv){
-            return fv.toLocaleLowerCase().indexOf(cv)>-1;
+            if(fv){
+                return fv.toLocaleLowerCase().indexOf(cv)>-1;
+            }
+            return false;
         },
         // -- finish w/
         'fw': function(fv, cv){
@@ -160,6 +190,18 @@ return {
         '0': function(fv, cv){
             return !fv;
         }
+    },
+
+    viewIsOne: function(viewName){
+        return viewName==='new' || viewName==='edit' || viewName==='view' || viewName==='json';
+    },
+    viewIsMany: function(viewName){
+        return viewName==='list' || viewName==='cards' || viewName==='charts' || viewName==='bubbles';
+    },
+
+    fieldInCharts: function (f) {
+        return (_.isUndefined(f.viewcharts) || f.viewcharts) && 
+            (f.type===fts.lov || f.type===fts.bool || f.type===fts.int || f.type===fts.money);
     },
 
     isNumberType: function(fType){
@@ -274,8 +316,7 @@ return {
         }
         return '';
     },
-
-    /*
+/*
      showDesigner: function(id, type, $el, context){
          var css='evodico-'+type,
              //$('<div class="evodico-'+type+'"></div>'),
@@ -323,8 +364,8 @@ return {
          $elDesModal.modal('show');
 
          return this;
-     },*/
-
+     },
+*/
     filterModels: function(models, filters){
         if(filters.length){
             // TODO pre-build function to avoid repeating loop
@@ -429,7 +470,7 @@ return {
             switch (fld.type) {
                 case fts.formula:
                     // TODO: in one.js or here?
-                    h.push('<div id="',fid, '" class="form-control">',fld.formula(),'</div>');
+                    h.push('<div id="',fid, '" class="form-control evol-truncate">',fld.formula(),'</div>');
                     break;
                 case fts.color: // TODO is the color switch necessary?
                     //h.push(uiInput.colorBox(fid, fv), fv);
@@ -496,6 +537,19 @@ return {
     bbComparatorText: function(fid){
         return function(modelA, modelB) {
             return (modelA.get(fid)||'').localeCompare(modelB.get(fid)||'');
+        };
+    },
+
+    sortingText: function(fid){
+            //return (modelA.get(fid)||'').localeCompare(modelB.get(fid)||'');
+        return function(modelA, modelB) {
+            if(modelA[fid]<modelB[fid]){
+                return 1;
+            }
+            if(modelB[fid]<modelA[fid]){
+                return -1;
+            }
+            return 0;
         };
     },
 

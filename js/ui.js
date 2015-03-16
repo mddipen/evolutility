@@ -11,31 +11,6 @@ var Evol = Evol || {};
 Evol.hashLov = {};
 Evol.ViewAction = {};
 
-var fts = {
-    text: 'text',
-    textml: 'textmultiline',
-    bool: 'boolean',
-    int: 'integer',
-    dec: 'decimal',
-    money: 'money',
-    date: 'date',
-    datetime: 'datetime',
-    time: 'time',
-    lov: 'lov',
-    list: 'list', // many values for one field (behave like tags - return an array of strings)
-    //html:'html',
-    formula:'formula',
-    email: 'email',
-    pix: 'image',
-    doc:'document',
-    url: 'url',
-    color: 'color',
-    hidden: 'hidden'
-    //json: 'json',
-    //rating: 'rating',
-    //widget: 'widget'
-};
-
 Evol.UI = {
 
     // --- static html fragments ---
@@ -43,7 +18,7 @@ Evol.UI = {
         trTableEnd: '</tr></table>',
         TdTrTableEnd: '</td></tr></table>',
         clearer: '<div class="clearfix"></div>',
-        emptyOption: '<option value=""></option>',
+        emptyOption: '<option value=""> - </option>',
         glyphicon: 'glyphicon glyphicon-',
         required: '<span class="evol-required">*</span>', // TODO replace by div w/ ":after" css for icon
         buttonClose: '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
@@ -159,7 +134,7 @@ Evol.UI = {
         lov: function (id, value, label, fLOV) {
             var h = '<select class="evo-field form-control" id="'+id+'"><option value="'+value+'" selected>'+label+'</option>';
             _.each(fLOV, function (f) {
-                h+=this.option(f.id, f.text);
+                h+=this.option(f.id, f.text);//, f.id===value);
             });
             h+='</select>';
             return h;
@@ -179,13 +154,13 @@ Evol.UI = {
             return  this.selectBegin(id, css, emptyOption)+this.options(list, value)+'</select>';
         },
 
-        option: function (id, text) {
-            return '<option value="'+id+'">'+text+'</option>';
+        option: function (id, text, selected) {
+            return '<option value="'+id+(selected?'" selected':'"')+'>'+text+'</option>';
         },
-        options: function (fields, value) {
+        options: function (lovList, value) {
             var fnOpt = Evol.UI.input.option,
                 opts='';
-            _.each(fields,function(f){
+            _.each(lovList,function(f){
                 if(f.id===value){
                     opts+='<option value="'+f.id+'" selected="selected">'+f.text+'</option>';
                 }else{

@@ -2,7 +2,7 @@
  *
  * evolutility :: many-charts.js
  *
- * View many charts
+ * View "many charts" to display a collection as a set of charts.
  *
  * https://github.com/evoluteur/evolutility
  * Copyright (c) 2015, Olivier Giulieri
@@ -11,6 +11,7 @@
 
 // Quick and easy implementation w/ the old version of google charts
 // must be re-written to use D3.js or other cool stuff
+
 Evol.ViewMany.Charts = Evol.ViewMany.extend({
 
     viewName: 'charts',
@@ -18,15 +19,18 @@ Evol.ViewMany.Charts = Evol.ViewMany.extend({
     options: {
         //sizes: '600x300',
         style: 'panel-info',
+        fieldsetFilter: Evol.Dico.fieldInCharts,
         autoUpdate: false
     },
-/*
+
     events: {
-        'click .evol-field-label .glyphicon-wrench': 'click_customize'
+        'click .evo-chart-config': 'changeChartType'
+        //'click .evol-field-label .glyphicon-wrench': 'click_customize'
     },
-*/
+
     render: function () {
         var h = [];
+        this.entityName=Evol.UI.capitalize(this.uiModel.entities);
         if(this.collection && this.collection.length>0){
             h.push('<div class="evol-many-', this.viewName, '">');
             this._HTMLcharts(h, this.style, this.sizes);
@@ -46,14 +50,14 @@ Evol.ViewMany.Charts = Evol.ViewMany.extend({
             uiModel = this.uiModel,
             models = this.collection.models,
             iconsPath = this.iconsPath || '',
-            chartFields = EvoDico.getFields(uiModel, function(f){
-                return (_.isUndefined(f.viewcharts) || f.viewcharts) && (f.type===fTypes.lov || f.type===fTypes.bool || f.type===fTypes.int || f.type===fTypes.money);
-            });
+            chartFields = this.getFields(),
+            chartType,
+            cData={},
+            entityName=this.entityName;
 
         if(chartFields && chartFields.length){
             var groups,
-                lb,
-                entityName=EvoUI.capitalize(uiModel.entities);
+                lb;
             _.each(chartFields, function(f){
                 var data=[],
                     labels=[],
@@ -66,7 +70,11 @@ Evol.ViewMany.Charts = Evol.ViewMany.extend({
                     });
                     for(dataSetName in groups) {
                         nb=groups[dataSetName];
-                        lb = (dataSetName==='true')?i18n.yes:i18n.no;
+                        if(dataSetName==='true'){
+                            lb = f.labeltrue || i18n.yes;
+                        }else{
+                            lb = f.labelfalse || i18n.no;
+                        }
                         data.push(nb);
                         labels.push(lb+' ('+nb+')');
                     }
@@ -93,12 +101,25 @@ Evol.ViewMany.Charts = Evol.ViewMany.extend({
                         labels.push(lb+' ('+nb+')');
                     }
                 }
-                if(f.type===fTypes.lov){
+                chartType = f.typechart || (f.type===fTypes.lov ? 'pie':'bars');
+                h.push('<div class="evol-chart-holder panel '+style+'">');
+                h.push('<div class="glyphicon glyphicon-cog evo-chart-config pull-right" data-id="'+f.id+'" data-ctype="'+chartType+'"></div>');
+                h.push('<div class="chart-holder">');
+                cData[f.id] = {
+                    field: f,
+                    data: data,
+                    labels: labels,
+                    style: style,
+                    sizes: sizes
+                };
+                if(chartType==='pie'){
                     h.push(EvoUI.Charts.Pie(f.labelcharts?f.labelcharts:i18n.getLabel('charts.aByB', entityName, f.label), data, labels, style, sizes));
-                }else{
+                }else if(chartType==='bars'){
                     h.push(EvoUI.Charts.Bars(f.labelcharts?f.labelcharts:i18n.getLabel('charts.aB', entityName, f.label), data, labels, style, sizes));
                 }
+                h.push('</div><br></div>');
             });
+            this._cData=cData;
         }else{
             h.push(EvoUI.HTMLMsg(i18n.nochart, i18n.badchart));
         }
@@ -108,6 +129,24 @@ Evol.ViewMany.Charts = Evol.ViewMany.extend({
     setPage: function(){
         // do nothing
         // b/c it can be invoked for all view Many
+    },
+
+    changeChartType: function(evt){
+        var i18n = Evol.i18n,
+            el=$(evt.currentTarget),
+            id=el.data('id'),
+            ctype=el.data('ctype'),
+            chart=Evol.UI.Charts,
+            oldData=this._cData[id],
+            f=oldData.field,
+            holder=el.parent().find('.chart-holder');
+        if(ctype==='pie'){
+            holder.html(chart.Bars(f.labelcharts?f.labelcharts:i18n.getLabel('charts.aB', this.entityName, f.label), oldData.data, oldData.labels, oldData.style, oldData.sizes));
+            el.data('ctype', 'bars');
+        }else{
+            holder.html(chart.Pie(f.labelcharts?f.labelcharts:i18n.getLabel('charts.aByB', this.entityName, f.label), oldData.data, oldData.labels, oldData.style, oldData.sizes));
+            el.data('ctype', 'pie');
+        }
     }
 
 });

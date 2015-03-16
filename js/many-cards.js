@@ -2,7 +2,7 @@
  *
  * evolutility :: many-cards.js
  *
- * View many cards
+ * View "many cards" to show a collection as many cards.
  *
  * https://github.com/evoluteur/evolutility
  * Copyright (c) 2015, Olivier Giulieri
@@ -51,7 +51,7 @@ Evol.ViewMany.Cards = Evol.ViewMany.extend({
             if (idx === 0) {
                 h.push('<div data-mid="', model.id, '">');
                 // Item badge
-                var bf=that.uiModel.badgefield;
+                var bf=that.uiModel.badge;
                 if(bf){
                     h.push('<span class="badge pull-right">');
                     if(_.isFunction(bf)){
@@ -71,6 +71,7 @@ Evol.ViewMany.Cards = Evol.ViewMany.extend({
             }
         });
         h.push('</div>');
+        return this;
     }/*,
 
     customize: function () {

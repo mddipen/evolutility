@@ -2,7 +2,7 @@
  *
  * evolutility :: many.js
  *
- * View many
+ * View "many" for other ViewMany views to inherit from.
  *
  * https://github.com/evoluteur/evolutility
  * Copyright (c) 2015, Olivier Giulieri
@@ -19,6 +19,7 @@ Evol.ViewMany = function() {
 
 return Backbone.View.extend({
 
+    viewName: 'Many',
     viewType: 'many',
     editable: false,
     cardinality: 'n',
@@ -33,7 +34,10 @@ return Backbone.View.extend({
         selectable: false,
         links: true,
         noDataString: i18n.nodata, //'No data to display.',
-        iconsPath: 'pix/'
+        iconsPath: 'pix/',
+        fieldsetFilter: function (f) {
+            return f.viewmany;
+        }
     },
 
     events: {
@@ -129,7 +133,7 @@ return Backbone.View.extend({
 
     setCollection: function (collection) {
         this.collection = collection;
-        return this;//.render();
+        return this.render();
     },
 
     getCollection: function () {
@@ -156,9 +160,7 @@ return Backbone.View.extend({
 
     getFields: function () {
         if (!this._fields) {
-            this._fields = eDico.getFields(this.uiModel, function (f) {
-                return f.viewmany;
-            });
+            this._fields = eDico.getFields(this.uiModel, this.fieldsetFilter);
             this._fieldHash = {};
             var fh = this._fieldHash;
             _.each(this._fields, function (f) {
@@ -272,7 +274,6 @@ return Backbone.View.extend({
                 bGap = function(){
                     h.push('<li class="disabled"><a href="javascript:void(0)">...</a></li>');
                 };
-
             h.push('<li data-id="prev"',
                 (pId===1)?' class="disabled"':'',
                 '><a href="javascript:void(0)">&laquo;</a></li>');

@@ -7,7 +7,8 @@ With it you configure views with metadata instead of hand-coding templates, Java
 
 [To Do list](http://evoluteur.github.io/evolutility/demo/index.html#todo/list),
 [AddressBook](http://evoluteur.github.io/evolutility/demo/index.html#contact/list),
-[Wine Cellar](http://evoluteur.github.io/evolutility/demo/index.html#winecellar/list).
+[Wine Cellar](http://evoluteur.github.io/evolutility/demo/index.html#winecellar/list),
+[Graphic Novels](http://evoluteur.github.io/evolutility/demo/index.html#comics/cards).
 
 ## Installation
 
@@ -189,6 +190,8 @@ Javascript, HTML5, CSS3,
 [Bootstrap] (http://getbootstrap.com/),
 [Bootstrap-datepicker] (http://eternicode.github.io/bootstrap-datepicker/),
 [Select2] (http://ivaynberg.github.io/select2/).
+
+Note: For convenience, all dependencies are minified together in a single file "vendors.min.js". The dependencies list is specified in "Gruntfile.js".
 
 ## Documentation
 

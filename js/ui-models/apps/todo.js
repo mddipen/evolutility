@@ -28,7 +28,8 @@ uiModels.todo = {
                         {id: 'fun', text: 'Fun'},
                         {id: 'others', text: 'Others'},
                         {id: 'misc', text: 'Misc.'}
-                    ]
+                    ],
+                    typechart:'bars'
                 }
             ]
         },
@@ -48,7 +49,9 @@ uiModels.todo = {
                 },
                 {
                     id: 'complete', attribute: 'complete', type: 'boolean', width: 100, viewmany: true,
-                    label: 'Complete', labelcharts:'Tasks completion'
+                    label: 'Complete', 
+                    labelcharts:'Tasks completion', labeltrue: 'Complete', labelfalse:'Incomplete',
+                    typechart:'pie'
                 }
             ]
         },
