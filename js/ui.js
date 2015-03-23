@@ -79,8 +79,8 @@ Evol.UI = {
             return '<textarea id="'+id+'" class="evo-field form-control" rows="'+height+'">'+value+'</textarea>';
                 //(maxLen > 0) ? ('" onKeyUp="Evol.UI.Validation.fixLength(this,' + maxLen + ')') : '',
         },
-        textMJSON: function (id, fVobj, height) {
-            return '<textarea id="'+id+'" rows="'+height+'" class="evol-json evo-field form-control">'+
+        textMJSON: function (id, fVobj, height, disabled) {
+            return '<textarea id="'+id+'" rows="'+height+'" class="evol-json evo-field form-control"'+(disabled?' disabled':'')+'>'+
                 _.escape(JSON.stringify(fVobj, null, '\t'))+'</textarea>';
         },
         myType: function (type, id, value) {
@@ -335,6 +335,7 @@ Evol.UI = {
             '<div class="panel-heading '+(p.csslabel? p.csslabel:'')+'">'+
             Evol.UI.icon('chevron-up', 'evol-title-toggle')+
             '<h3 class="panel-title">'+p.label+'</h3>'+
+            (p.label2?'<div class="evol-subtitle">'+p.label2+'</div>' : '')+
             (p.help?'<p class="evo-panel-help">'+p.help+'</p>':'')+
             '</div>';
     },
