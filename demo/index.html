@@ -28,7 +28,7 @@
 <div class="evo-header">
     <div class="evo-logo"><a href="../index.html"><span>evol</span>utility<span>.js</span></a></div>
     <ul class="evo-head-links">
-        <li><a href="index.html" class="sel">demo</a></li>
+        <li><a href="index.html" class="sel">demos</a></li>
         <li class="evo-link2">
             <ul class="evo-head-links2">
                 <li><a href="#todo" data-id="todo">todo</a></li>
@@ -44,7 +44,7 @@
 </div>
 
 <div class="evo-title2">
-    <h1 id="title">Demo</h1>
+    <h1 id="title">Demos</h1>
 </div>
 
 <div class="evo-content2">
@@ -63,8 +63,7 @@
             <div><a href="#comics/cards" data-id="comics"><img src="pix/comics.png" class="evo-icon-16">Graphic novels</a></div>
         </div>
 
-        <p>For each Backbone model, a single UI-model defines all views.
-            See the UI model for the sample apps: <a href="javascript:showUIModel('todo')">To Do</a>,
+         <p>The demo apps are configured with these UI models: <a href="javascript:showUIModel('todo')">To Do</a>,
             <a href="javascript:showUIModel('contact')">Addressbook</a>,
             <a href="javascript:showUIModel('winecellar')">Wine Cellar</a>,
             <a href="javascript:showUIModel('comics')">Graphic novels</a>.
@@ -72,12 +71,15 @@
         </p>
         <div style="display:none;" id="uimodel"></div>
 
-        <p>For these demos, the data is stored in your browser's local storage
-            (using <a href="https://github.com/jeromegn/Backbone.localStorage" target="bbls">Backbone.localStorage</a>).
+<p>
+
+
+
+        <p>Note: The data for these demos is stored in your browser's local storage
+            (using <a href="https://github.com/jeromegn/Backbone.localStorage" target="bbls">Backbone.localStorage</a>) but Evolutility can be configured for a REST API.
           </p>
 
     </div>
-
 
     <div class="clearfix"></div>
 
@@ -93,8 +95,8 @@
         createSampleDataIfEmpty('winecellar');
         createSampleDataIfEmpty('comics');
 
-        // - run shell which set demo
-        new Evol.Shell({
+        // - run App
+        new Evol.App({
             el:$('#evol'),
             uiModelsObj: {
                 todo: uiModels.todo,
