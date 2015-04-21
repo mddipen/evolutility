@@ -239,9 +239,9 @@ uiModels.comics_data = [{
   "authors": "Franck Miller",
   "complete": true,
   "finished": true,
-  "have": "",
-  "haveNb": null,
-  "serieNb": null,
+  "have": "1",
+  "haveNb": 1,
+  "serieNb": 1,
   "language": "EN",
   "notes": "",
   "pix": "comics/ronin.jpeg"
@@ -275,7 +275,7 @@ uiModels.comics_data = [{
 {
   "title": "The Shaolin Cowboy",
   "genre": "fantasy",
-  "authors": "",
+  "authors": "Geof Darrow and Lana and Andy Wachowski",
   "complete": true,
   "finished": true,
   "have": "1",

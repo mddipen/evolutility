@@ -35,6 +35,10 @@ module.exports = function (grunt) {
                     'bower_components/backbone/backbone.js',
                     'bower_components/backbone.localStorage/backbone.localStorage.js',
 
+
+                    'bower_components/tabletop/src/*.js',
+
+
                     // Twitter Bootstrap
                     'bower_components/bootstrap/js/modal.js',
                     'bower_components/bootstrap/js/button.js',
