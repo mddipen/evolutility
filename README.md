@@ -29,19 +29,19 @@ Evolutility's views have a Backbone model (to define the data) and also a UI-mod
 All views for a Backbone model and collection share a single UI-Model which defines of all UI elements across views in a simple declarative way.
 
 Evolutility provides 3 types of view
-* Views for a model: View, Edit, Mini (quick edit), JSON.
-* Views for a collection: List, Cards, Charts.
+* Views for a model: Browse, Edit, Mini (quick edit), JSON.
+* Views for a collection: List, Cards, Bubbles, Charts.
 * Views for actions on a model or collection: Export, Filter.
 
 A large part of the API (methods, options and events) is common to all views. Some views have additional API.
 
 ## Views for One model
-### View
+### Browse
 Shows all fields for viewing (read only). Fields are grouped in panels and tabs.
 
-![screenshot 1](https://raw.githubusercontent.com/evoluteur/evolutility/master/doc/screenshots/one-view.gif)
+![screenshot 1](https://raw.githubusercontent.com/evoluteur/evolutility/master/doc/screenshots/one-browse.gif)
 ```javascript
-var vw = new Evol.ViewOne.View({
+var vw = new Evol.ViewOne.Browse({
             el: myElement,
             uiModel: myUIModel,
             model: myModel
@@ -101,6 +101,18 @@ Shows records side by side as cards.
 ![screenshot 1](https://raw.githubusercontent.com/evoluteur/evolutility/master/doc/screenshots/many-cards.gif)
 ```javascript
 var vw = new Evol.ViewMany.Cards({
+            el: myElement,
+            uiModel: myUIModel,
+            colllection: myCollection
+        });
+```
+### Bubbles
+The "Bubbles" view displays the data as bubbles with controls to group them and set their color and size (this view uses D3.js). 
+    A tooltip with the Card view of the item show on mouse over.
+
+![screenshot 1](https://raw.githubusercontent.com/evoluteur/evolutility/master/doc/screenshots/many-bubbles.gif)
+```javascript
+var vw = new Evol.ViewMany.Bubbles({
             el: myElement,
             uiModel: myUIModel,
             colllection: myCollection
