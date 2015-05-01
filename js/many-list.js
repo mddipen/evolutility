@@ -18,27 +18,27 @@ Evol.ViewMany.List = Evol.ViewMany.extend({
     },
 
     _render: function (models) {
-        var h = [],
+        var h = '',
             that = this,
             fields = this.getFields(),
             pSize = this.pageSize || 50,
             link = (this.links!==false);
 
-        h.push('<div class="evol-many-list">',
-            '<table class="table table-bordered', link?' table-hover':'', '"><thead><tr>');
+        h+='<div class="evol-many-list">'+
+            '<table class="table table-bordered'+(link?' table-hover':'')+'"><thead><tr>';
         if(this.selectable){
-            h.push('<th class="list-td-sel">', this._HTMLCheckbox('cbxAll'), '</th>');
+            h+='<th class="list-td-sel">'+this._HTMLCheckbox('cbxAll')+'</th>';
         }
         _.each(fields, function(field){
-            that._HTMLlistHeader(h, field);
+            h+=that._HTMLlistHeader(field);
         });
-        h.push('</tr></thead><tbody>');
-        this._HTMLbody(h, fields, pSize, this.uiModel.icon, 0, this.selectable);
-        h.push('</tbody></table>');
-        this._HTMLpagination(h, 0, pSize, models.length);
-        h.push('<div class="evo-many-summary">', this.pageSummary(this.pageIndex, pSize, models.length), '</div>',
-            '</div>');
-        this.$el.html(h.join(''));
+        h+='</tr></thead><tbody>'+
+            this._HTMLbody(fields, pSize, this.uiModel.icon, 0, this.selectable)+
+            '</tbody></table>'+
+            this._HTMLpagination(0, pSize, models.length)+
+            '<div class="evo-many-summary">'+this.pageSummary(this.pageIndex, pSize, models.length)+'</div>'+
+            '</div>';
+        this.$el.html(h);
     },
 
     _$body: function(){
@@ -52,9 +52,9 @@ Evol.ViewMany.List = Evol.ViewMany.extend({
             link = (this.links!==false),
             ft = Evol.Dico.fieldTypes;
 
-        h.push('<tr data-mid="', model.id, '">');
+        h.push('<tr data-mid="'+model.id+'">');
         if(selectable){
-            h.push('<td class="list-td-sel">', this._HTMLCheckbox(model.id), '</td>');
+            h.push('<td class="list-td-sel">'+this._HTMLCheckbox(model.id)+'</td>');
         }
         _.each(fields, function(f, idx){
             if(f.type===ft.color){
@@ -78,26 +78,27 @@ Evol.ViewMany.List = Evol.ViewMany.extend({
                 }
             }
             if(f.type===ft.textml){
-                h.push('<td class="evol-ellipsis">', v, '</td>');
+                h.push('<td class="evol-ellipsis">'+v+'</td>');
             }else if(Evol.Dico.isNumberType(f.type)){
-                h.push('<td class="evol-r-align">', v, '</td>');
+                h.push('<td class="evol-r-align">'+v+'</td>');
             }else{
-                h.push('<td>', v, '</td>');
+                h.push('<td>'+v+'</td>');
             }
         });
         h.push('</tr>');
     },
 
-    _HTMLlistHeader: function (h, f) {
-        h.push('<th><span id="', f.id, '-lbl">',
-            f.labellist || f.labelmany || f.label);
+    _HTMLlistHeader: function (f) {
+        var h='<th><span id="'+f.id+'-lbl">'+
+            (f.labellist || f.labelmany || f.label);
         if(f.sortable!==false){
-            h.push('<span class="evol-sort-icons" data-fid="', f.id, '">',
-                Evol.UI.icon('chevron-up'),//'sort-by-alphabet'
-                Evol.UI.icon('chevron-down'),//'sort-by-alphabet-alt'
-                '</span>');
+            h+='<span class="evol-sort-icons" data-fid="'+f.id+'">'+
+                Evol.UI.icon('chevron-up')+//'sort-by-alphabet'
+                Evol.UI.icon('chevron-down')+//'sort-by-alphabet-alt'
+                '</span>';
         }
-        h.push('</span></th>');
+        h+='</span></th>';
+        return h;
     }
 
 });

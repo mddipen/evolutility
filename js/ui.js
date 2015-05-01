@@ -10,6 +10,7 @@
 var Evol = Evol || {};
 Evol.hashLov = {};
 Evol.ViewAction = {};
+Evol.Version = '0.5';
 
 Evol.UI = {
 
@@ -39,12 +40,13 @@ Evol.UI = {
     input: {
 
         text: function (id, value, fd, css) {
-            var fCss= 'evo-field form-control ' + (css || ''),
-                h = '<input type="text" id="'+id+'" value="'+value;
+            var h = '<input type="text" id="'+id;
             if(value.indexOf('"')>-1){
                 value=value.replace(/"/g,'\"');
             }
+            h+='" value="'+value;
             if(fd) {
+                h+='" class="evo-field form-control '+(css || '');
                 // properties mapping to html attributes
                 _.each(['id', 'min', 'max', 'maxlength', 'placeholder'], function (item) { // 'max-width', 'min-width',
                     if (!_.isUndefined(fd[item])) {
@@ -54,9 +56,6 @@ Evol.UI = {
                 //other fields attributes
                 if(fd.readonly){
                     h+='" disabled="disabled';
-                }
-                if(fCss){
-                    h+='" class="'+fCss;
                 }
             }
             h+='">';

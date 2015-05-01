@@ -87,8 +87,9 @@ return Backbone.View.extend({
         return this.setTitle();
     },
 
-    _HTMLbody: function (h, fields, pSize, icon, pageIdx, selectable) {
-        var models = this.collection.models,
+    _HTMLbody: function (fields, pSize, icon, pageIdx, selectable) {
+        var h =[],
+            models = this.collection.models,
             model,
             r,
             rMin = (pageIdx > 0) ? pageIdx * pSize : 0,
@@ -102,6 +103,7 @@ return Backbone.View.extend({
                 this.HTMLItem(h, fields, model, ico, selectable, route);
             }
         }
+        return h.join('');
     },
 
     _render: function (models) {
@@ -116,7 +118,7 @@ return Backbone.View.extend({
                 (this.model?f.formula(this.model):'') +
                 '</div>';
         }else{
-            fv = eDico.HTMLField4Many(f, v, Evol.hashLov, this.iconsPath || '');
+            fv = eDico.fieldHTML_ReadOny(f, v, Evol.hashLov, this.iconsPath || '');
             if (f.type === 'list') {
                 return _.escape(fv);
             }
@@ -192,11 +194,8 @@ return Backbone.View.extend({
             collecLength = this.collection.length,
             pSummary = this.pageSummary(pageIdx, pSize, collecLength);
 
-        this._HTMLbody(h, fields, pSize, this.uiModel.icon, pageIdx, this.selectable);
-        this._$body().html(h.join(''));
-        h = [];
-        this._HTMLpaginationBody(h, pageIdx, pSize, collecLength);
-        this.$('.evo-pagination').html(h.join(''));
+        this._$body().html(this._HTMLbody(fields, pSize, this.uiModel.icon, pageIdx, this.selectable));
+        this.$('.evo-pagination').html(this._HTMLpaginationBody(pageIdx, pSize, collecLength));
         this.$('.evo-many-summary').html(pSummary);
         this.pageIndex = pageIdx;
         this.$el.trigger('status', pSummary);
@@ -257,22 +256,24 @@ return Backbone.View.extend({
         }
     },
 
-    _HTMLpagination: function (h, pIdx, pSize, cSize) {
+    _HTMLpagination: function (pIdx, pSize, cSize) {
         if (cSize > pSize) {
-            h.push('<ul class="evo-pagination pagination pagination-sm">');
-            this._HTMLpaginationBody(h, pIdx, pSize, cSize);
-            h.push('</ul>');
+            return '<ul class="evo-pagination pagination pagination-sm">'+
+                this._HTMLpaginationBody(pIdx, pSize, cSize)+
+                '</ul>';
         }
+        return '';
     },
 
-    _HTMLpaginationBody: function (h, pIdx, pSize, cSize) {
+    _HTMLpaginationBody: function (pIdx, pSize, cSize) {
+        var h='';
         if (cSize > pSize) {
             var nbPages = Math.ceil(cSize / pSize),
                 pId = pIdx + 1,
                 maxRange,
                 bPage = function(id){
-                    h.push('<li', pId===id?' class="active"':'',
-                        ' data-id="', id, '"><a href="javascript:void(0)">', id, '</a></li>');
+                    h+='<li'+(pId===id?' class="active"':'')+
+                        ' data-id="'+id+'"><a href="javascript:void(0)">'+id+'</a></li>';
                 },
                 bPageRange = function(pStart, pEnd){
                     for (var i=pStart; i<=pEnd; i++) {
@@ -280,11 +281,11 @@ return Backbone.View.extend({
                     }
                 },
                 bGap = function(){
-                    h.push('<li class="disabled"><a href="javascript:void(0)">...</a></li>');
+                    h+='<li class="disabled"><a href="javascript:void(0)">...</a></li>';
                 };
-            h.push('<li data-id="prev"',
-                (pId===1)?' class="disabled"':'',
-                '><a href="javascript:void(0)">&laquo;</a></li>');
+            h+='<li data-id="prev"'+
+                ((pId===1)?' class="disabled"':'')+
+                '><a href="javascript:void(0)">&laquo;</a></li>';
             bPage(1);
             if(pId>4 && nbPages>6){
                 if(pId===5){
@@ -302,10 +303,11 @@ return Backbone.View.extend({
                 bGap();
                 bPage(nbPages);
             }
-            h.push('<li data-id="next"',
-                (nbPages > pId) ? '' : ' class="disabled"',
-                '><a href="javascript:void(0)">&raquo;</a></li>');
+            h+='<li data-id="next"'+
+                ((nbPages > pId) ? '' : ' class="disabled"')+
+                '><a href="javascript:void(0)">&raquo;</a></li>';
         }
+        return h;
     },
 
     sortList: function (f, down, noRemember, noTrigger) {
