@@ -65,7 +65,7 @@ Evol.ViewMany.List = Evol.ViewMany.extend({
                 v = that._HTMLField(f, model.escape(f.attribute || f.id));
             }
             if(idx===0){
-                v = Evol.Dico.HTMLFieldLink('fv-'+f.id, f, v, icon, !link, route?route+model.id:null);
+                v = Evol.Dico.HTMLFieldLink(null, f, v, icon, !link, route?route+model.id:null);
                 // Item badge
                 if(bf){
                     v+='<span class="badge badge-list">';
@@ -77,13 +77,13 @@ Evol.ViewMany.List = Evol.ViewMany.extend({
                     v+='</span>';
                 }
             }
-            if(f.type===ft.textml){
-                h.push('<td class="evol-ellipsis">'+v+'</td>');
+            var css=f.css || '';
+            if(f.type===ft.textml || f.type===ft.email || f.type===ft.url){
+                css+=' evol-ellipsis';
             }else if(Evol.Dico.isNumberType(f.type)){
-                h.push('<td class="evol-r-align">'+v+'</td>');
-            }else{
-                h.push('<td>'+v+'</td>');
+                css+=' evol-r-align';
             }
+            h.push('<td class="'+css+'">'+v+'</td>');
         });
         h.push('</tr>');
     },
