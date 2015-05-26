@@ -59,16 +59,24 @@
 <p>It is a first draft and it is nor fully implemented yet. It is still a work in progress based on
     <a href="http://www.codeproject.com/Articles/28636/Minimalist-Meta-Model-for-CRUD-Applications" target="evomm">Evolutility minimalist meta-model</a>.</p>
  
-        <p>Elements: 
-            <a href="#object">object</a> - 
-            <a href="#field">field</a> - 
-            <a href="#panel">panel</a> - 
-            <a href="#panel-list">panel-list</a> - 
+        <p class="links-bh">Elements: 
+            <a href="#object">object</a> 
+            <a href="#field">field</a> 
+            <a href="#panel">panel</a> 
+            <a href="#panel-list">panel-list</a> 
             <a href="#tab">tab</a>
         </p> 
 
-<span class="evol-required">*</span>: required attribute.
-<span class="evol-asterix">*</span>: partially or not implemented yet.
+        <p>The names used for elements attributes are usually single words, otherwise they use lower camel case as in "maxLength".</p>
+
+        <p class="links-bh">Sample UI Model: 
+            <a href="#sample">todo app</a>
+        </p> 
+
+        <p>&nbsp;</p>
+
+        <span class="evol-required">*</span>: required attribute.
+        <span class="evol-asterix">*</span>: partially or not implemented yet.
 
 
 <a name="object" class="evo-anchor">&nbsp;</a>
@@ -77,16 +85,16 @@
 
 <p>An "object" is the UI information mapped to a Backbone model to drive all <a href="views.html">views</a> for that model.
 
-<table class="table table-bordered">
+<table class="table table-bordered t-props">
     <tbody>
     <tr>
-        <td style="width: 120px; ">id<span class="evol-required">*</span>
+        <td>id<span class="evol-required">*</span>
         </td>
         <td>UI-model unique ID. It is used as a key to identify the UI-model but never displayed to the user.
         </td>
     </tr>
     <tr>
-        <td>entity<span class="evol-required">*</span>
+        <td>name<span class="evol-required">*</span>
         </td>
         <td>User's object name for the Backbone model.
             <br>Example: "task" for a
@@ -94,13 +102,13 @@
         </td>
     </tr>
     <tr>
-        <td>entities<span class="evol-required">*</span>
+        <td>namePlural<span class="evol-required">*</span>
         </td>
-        <td>Plural for <code>entity</code>.<br>Example &quot;tasks&quot;.
+        <td>Plural for <code>name</code>.<br>Example: { name: 'task', namePlural: 'tasks'}
         </td>
     </tr>
     <tr>
-        <td>elements[]<span class="evol-required">*</span>
+        <td>elements[ ]<span class="evol-required">*</span>
         </td>
         <td>
             Array of tabs or panels which contains fields.
@@ -113,15 +121,29 @@
         </td>
     </tr>
     <tr>
-        <td>badge</td>
-        <td>id of the field to display as a badge near the items' title. Can also be a function taking model as a parameter.
-            <br/>Example: badgefield = &quot;price&quot;</td>
+        <td>fnBadge</td>
+        <td>id of the field to display the value of as a badge near the items' title. Can also be a function taking the model as a parameter.
+            <br/>Example 1: fnBadge = &quot;price&quot;
+            <br>Example 2: 
+                    fnBadge = function(model){
+                        return model.get('orders').length || 0;
+                    }
+            </td>
     </tr>
     <tr>
-        <td>leadfield</td>
+        <td>fnTitle</td>
         <td>id of the field to use for the page title (when using option "$title"). Can also be a function taking model as a parameter.
-            <br/>Example 1: leadfield = &quot;firstname&quot;<br/>
-            Exemple 2: leadfield = function(model){ return model.get('firstname')+' '+model.get('lastname')}</td>
+            <br/>Example 1: fnTitle = &quot;firstname&quot;<br/>
+            Exemple 2: fnTitle = function(model){ return model.get('firstname')+' '+model.get('lastname')}</td>
+    </tr>
+    <tr>
+        <td>fnSearch <span class="evol-asterix">*</span></td>
+        <td>Function to perform searches on the models. <br>
+            Example: fnSearch = function (){
+                return model.get('firstname').toLowerCase().indexOf(searchString)>-1 ||
+                    model.get('lastname').toLowerCase().indexOf(searchString)>-1;
+            }
+            </td>
     </tr>
     <tr>
         <td>icon
@@ -142,9 +164,10 @@
                 ]</td>
     </tr>
     <tr>
-        <td>searchfields <span class="evol-asterix">*</span>
+        <td>searchFields[ ] <span class="evol-asterix">*</span>
         </td>
         <td>
+        List of fields which participate in search (array of field ids).
         </td>
     </tr>
     <tr>
@@ -163,10 +186,10 @@
     <p>Attributes in your Backbone model are mapped to fields in the UI.</p>
     <p>These fields have the following properties:</p>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered t-props">
         <tbody>
 
-        <tr>
+        <tr class="t-row">
             <th colspan="2">Identity</th>
         </tr>
         <tr>
@@ -179,34 +202,22 @@
                 If no value is provided for "attribute", the value of the attribute "id" is used.</td>
         </tr>
         <tr>
-            <td>value
-            </td>
-            <td>Function to evaluate to render the field content.
-                <br/>i.e.: value = function(model) {return model.escape('name');}
-            </td>
-        </tr>
-        <tr>
             <td>label<span class="evol-required">*</span>
             </td>
             <td>Field title in all views. (Can be overridden for specific views with labellist, labelexport...).
             </td>
         </tr>
         <tr>
-            <td>labelcharts
-            </td>
-            <td>Title of the Chart based on this field (in Charts view).
-            </td>
-        </tr>
-        <tr>
-            <td>labeltrue, labelfalse
-            </td>
-            <td>Only applies to boolean fields. Displayed value for true or false in charts (may be used in other places in the future).
-            </td>
-        </tr>
-        <tr>
-            <td>defaultvalue
+            <td>defaultValue
             </td>
             <td>Default value for the field when creating a new record.
+            </td>
+        </tr>
+        <tr>
+            <td>value
+            </td>
+            <td>Function to evaluate to render the field content.
+                <br/>i.e.: value = function(model) {return model.escape('name');}
             </td>
         </tr>
         <tr>
@@ -245,15 +256,8 @@
             </td>
         </tr>
 
-        <tr>
+        <tr class="t-row">
             <th colspan="2">Layout</th>
-        </tr>
-        <tr>
-            <td>typechart<span class="evol-asterix">*</span>
-            </td>
-            <td>Type of chart used for this fields (in Charts view). Possible values: Pie, vBar, hBar (more later).
-                <br>Note: Only applies for fields which supports charts (fields of type boolean, integer, money, lov).
-            </td>
         </tr>
         <tr>
             <td >css<span class="evol-asterix">*</span>
@@ -262,7 +266,7 @@
             </td>
         </tr>
         <tr>
-            <td>csslabel
+            <td>cssLabel
             </td>
             <td>CSS class name for the specific field label (in views Edit, Browse and Mini).
             </td>
@@ -283,21 +287,46 @@
             </td>
         </tr>
         <tr>
-            <td>img
-            </td>
-            <td>Image to display (for fields of type &quot;boolean&quot; or &quot;url&quot;) in Edit or Browse modes.
-            </td>
-        </tr>
-        <tr>
             <td>width
             </td>
             <td><p>Width of the field in percentage of the Panel it belongs to.
                 <br/>Default: 100%
             </p></td>
         </tr>
-
-
         <tr>
+            <td>img
+            </td>
+            <td>Image to display (for fields of type &quot;boolean&quot; or &quot;url&quot;) in Edit or Browse modes.
+            </td>
+        </tr>
+        <tr>
+            <td>imgEmpty
+            </td>
+            <td>Image to display when the value (path to the picture) is empty or doesn't lead to a valid image (for fields of type &quot;image&quot;).
+            </td>
+        </tr>
+        <tr>
+            <td>labelTrue, labelFalse
+            </td>
+            <td>Only applies to boolean fields. Displayed value for true or false in charts (may be used in other places in the future).
+            </td>
+        </tr>
+        <tr>
+            <td>labelCharts
+            </td>
+            <td>Title of the Chart based on this field (in Charts view).
+            </td>
+        </tr>
+        <tr>
+            <td>typeChart<span class="evol-asterix">*</span>
+            </td>
+            <td>Type of chart used for this fields (in Charts view). Possible values: Pie, vBar, hBar (more later).
+                <br>Note: Only applies for fields which supports charts (fields of type boolean, integer, money, lov).
+            </td>
+        </tr>
+
+
+        <tr class="t-row">
             <th colspan="2">Validation</th>
         </tr>
         <tr>
@@ -305,7 +334,7 @@
             <td>Maximum value allowed for the field (N/A for some field types).</td>
         </tr>
         <tr>
-            <td>maxlength</td>
+            <td>maxLength</td>
             <td>Maximum number of characters allowed for the field value.
             </td>
         </tr>
@@ -314,12 +343,12 @@
             <td>Minimum value allowed for the field (only applicable to integer, decimal, money field types).</td>
         </tr>
         <tr>
-            <td>minlength</td>
+            <td>minLength</td>
             <td>Minimum number of characters allowed for the field value to be valid.
             </td>
         </tr>
         <tr>
-            <td>regex
+            <td>regExp
             </td>
             <td>Regular expression to validate the field value against.
             </td>
@@ -337,12 +366,12 @@
             </td>
         </tr>
         <tr>
-            <td>customvalidation</td>
+            <td>fnValidate</td>
             <td>Name of the Javascript custom method for the field validation (validation for required, min, max, type is still performed in addition).</td>
         </tr>
 
 
-        <tr>
+        <tr class="t-row">
             <th colspan="2">Behavior</th>
         </tr>
         <tr>
@@ -358,13 +387,13 @@
             </td>
         </tr>
         <tr>
-            <td>linklabel<span class="evol-asterix">*</span>
+            <td>linkLabel<span class="evol-asterix">*</span>
             </td>
             <td>Display a sentence or an image as the link. Can also be a function (model).
             </td>
         </tr>
         <tr>
-            <td>linktarget<span class="evol-asterix">*</span>
+            <td>linkTarget<span class="evol-asterix">*</span>
             </td>
             <td>Directs to a new tab in the browser (HTML attribute "target").
             </td>
@@ -397,18 +426,33 @@
             </td>
         </tr>
         <tr>
-            <td>viewcharts
+            <td>inCharts
             </td>
             <td>Determines if a chart is displayed in the Charts view for grouping by this specific field.
             </td>
         </tr>
         <tr>
-            <td>viewmany, viewlist, <br/>
-                viewcards, viewedit, <br/>
-                viewmini, viewexport,
-                viewcharts
+            <td>inMany
             </td>
-            <td>Determines if the field is available in specific views.
+            <td>Determines if the field is shown in views "Many" (List, Card...).
+            </td>
+        </tr>
+        <tr>
+            <td>inExport
+            </td>
+            <td>If set to false, the field will not be available in Export.
+            </td>
+        </tr>
+        <tr>
+            <td>inMini
+            </td>
+            <td>By default fields included in the Mini view are required fields and fields shown in views List and Cards. Setting inMini to true add the field to the Mini view.
+            </td>
+        </tr>
+        <tr>
+            <td>inList, inCards
+            </td>
+            <td>Possibility to override inMany a specific field in view Card or List.
             </td>
         </tr>
         </tbody></table>
@@ -421,7 +465,7 @@
     <p>The <code>panel</code> element is used to group fields together in the forms.
         Fields are grouped in panels and panels can be grouped in tabs. </p>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered t-props">
         <tbody>
         <tr>
             <td style="width: 120px; ">id</td>
@@ -434,14 +478,14 @@
             </td>
         </tr>
         <tr>
-            <td>csslabel
+            <td>cssLabel
             </td>
             <td>
                 Additional CSS class for the panel title (label).
             </td>
         </tr>
         <tr>
-            <td>elements[]<span class="evol-required">*</span>
+            <td>elements[ ]<span class="evol-required">*</span>
             </td>
             <td>
                 Array of fields.
@@ -496,7 +540,7 @@
 
     <p>Similar to a panel but used to display a sub-collection (an array of objects). It is the "details" part in a "master-details" (and can have multiple details).</p>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered t-props">
         <tbody>
         <tr>
             <td>attribute<span class="evol-required">*</span></td>
@@ -519,14 +563,14 @@
             </td>
         </tr>
         <tr>
-            <td>csslabel
+            <td>cssLabel
             </td>
             <td>
                 Additional CSS class for the panel title (label).
             </td>
         </tr>
         <tr>
-            <td>elements[]<span class="evol-required">*</span>
+            <td>elements[ ]<span class="evol-required">*</span>
             </td>
             <td>
                 Array of fields in the sub-collection.
@@ -565,7 +609,7 @@
 <section>
     <h1>tab</h1>
     <p>The <code>tab</code> element can be used to group panels and panel-lists.</p>
-    <table class="table table-bordered">
+    <table class="table table-bordered t-props">
         <tbody><tr>
             <td style="width: 120px; ">
                 css
@@ -576,14 +620,14 @@
         </tr>
         <tr>
             <td>
-                csslabel
+                cssLabel
             </td>
             <td>
                 Additional CSS class for the tab title.
             </td>
         </tr>
         <tr>
-            <td>elements[]<span class="evol-required">*</span>
+            <td>elements[ ]<span class="evol-required">*</span>
             </td>
             <td>
                 Array of panels and panel-lists.
@@ -604,7 +648,7 @@
 <section>
     <h1>Sample UI-model</h1>
 
-    <p>The classic "todo app".</p>
+    <p>See below the UI-model for the "todo app" in <a href="../demo/index.html#todo">Evolutility demo</a>.</p>
 
     <iframe style="width:100%;height:300px" src="../js/ui-models/apps/todo.js"></iframe>
 

@@ -142,12 +142,12 @@ return Backbone.View.extend({
     getTitle: function(){
         if(this.model){
             if(this.model.isNew && this.model.isNew()){
-                return i18n.getLabel('NewEntity', this.uiModel.entity);
+                return i18n.getLabel('NewEntity', this.uiModel.name);
             }
-            var lf=this.uiModel.leadfield;
+            var lf=this.uiModel.fnTitle;
             return _.isFunction(lf)?lf(this.model):this.model.get(lf);
         }else{
-            return eUI.capitalize(this.uiModel.entity);
+            return eUI.capitalize(this.uiModel.name);
         }
     },
 
@@ -227,7 +227,7 @@ return Backbone.View.extend({
                             $f.html(eDico.fieldHTML_ReadOny(f, _.isUndefined(fv)?'':fv, Evol.hashLov, iconsPath) + ' ');
                             break;
                         case fts.formula:
-                            $f.html(f.formula(model));
+                            $f.html(f.formula?f.formula(model):'');
                             break;
                         case fts.color:
                             $f.html(uiInput.colorBox(f.id, fv, fv));
@@ -257,7 +257,7 @@ return Backbone.View.extend({
                             $f.select2('val', fv);
                             break;
                         case fts.formula:
-                            $f.html(f.formula(model));
+                            $f.html(f.formula?f.formula(model):'');
                             break;
                         default:
                             $f.val(fv);
@@ -284,8 +284,8 @@ return Backbone.View.extend({
 
         this.clear();
         _.each(this.getFields(), function(f){
-            if(f.hasOwnProperty('defaultvalue')){
-                that.setFieldValue(f.id, f.defaultvalue);
+            if(f.hasOwnProperty('defaultValue')){
+                that.setFieldValue(f.id, f.defaultValue);
             }
         });
         return this;
@@ -361,7 +361,7 @@ return Backbone.View.extend({
         this.clearMessages();
         _.each(this.getFields(), function (f) {
             $f = that.$field(f.id);
-            defaultVal = f.defaultvalue || '';
+            defaultVal = f.defaultValue || '';
             if(f.readonly){
                 $f.html(defaultVal);
             }else{
@@ -572,11 +572,11 @@ return Backbone.View.extend({
         _.each(tabs, function (tab, idx) {
             if (tab.type === 'tab') {
                 if (isFirst) {
-                    h.push('<li class="active '+(tab.csslabel||'')+'">');
+                    h.push('<li class="active '+(tab.cssLabel||'')+'">');
                     isFirst = false;
                 } else {
-                    if(tab.csslabel){
-                        h.push('<li class="'+tab.csslabel+'">');
+                    if(tab.cssLabel){
+                        h.push('<li class="'+tab.cssLabel+'">');
                     }else{
                         h.push('<li>');
                     }
@@ -617,7 +617,7 @@ return Backbone.View.extend({
                 that._renderPanelList(h, elem, elem.readonly?'browse':mode);
             }else{
                 if(elem.type==fts.hidden){
-                    h.push(uiInput.hidden(that.fieldViewId(elem.id), that.getModelFieldValue(elem.id, elem.defaultvalue, mode)));
+                    h.push(uiInput.hidden(that.fieldViewId(elem.id), that.getModelFieldValue(elem.id, elem.defaultValue, mode)));
                 }else{
                     h.push('<div style="width:'+parseInt(elem.width||100, 10)+'%" class="pull-left evol-fld">');
                     that.renderField(h, elem, mode, iconsPath);
@@ -665,8 +665,7 @@ return Backbone.View.extend({
                 _.each(vs, function(row, idx){
                     h.push('<tr data-idx="'+idx+'">');
                     if(editable){
-                        that._TDsFieldsEdit(h, uiPnl.elements, row);
-                        h.push(TDbPM);
+                        h.push(that._TDsFieldsEdit(uiPnl.elements, row)+TDbPM);
                     }else{
                         _.each(fs, function (f) {
                             h.push('<td>');
@@ -698,30 +697,32 @@ return Backbone.View.extend({
             '</td></tr>';
     },
 
-    _TDsFieldsEdit: function(h, fs, m){
-        var fv,
+    _TDsFieldsEdit: function(fs, m){
+        var h='',
+            fv,
             iconPath=this.iconPath;
         _.each(fs, function (f) {
             fv=m[f.id];
             if(_.isUndefined(fv)){
                 fv='';
             }
-            h.push('<td>'+
-                eDico.fieldHTML(f, f.id, fv, 'edit-details', iconPath, true)+
-                '</td>');
+            h+='<td>'+eDico.fieldHTML(f, f.id, fv, 'edit-details', iconPath, true)+'</td>';
         });
+        return h;
     },
 
     renderField: function (h, f, mode, iconsPath, skipLabel) {
         var fv='';
         if(this.model && this.model.has(f.id)){
-            fv = (mode !== 'new') ? this.model.get(f.id) : f.defaultvalue || '';
+            fv = (mode !== 'new') ? this.model.get(f.id) : f.defaultValue || '';
         }
         if(f.type==='formula'){
             h.push(Evol.Dico.HTMLFieldLabel(f, mode || 'edit')+
-                '<div id="'+this.fieldViewId(f.id)+'" class="disabled evo-rdonly evol-ellipsis">'+
-                (this.model?f.formula(this.model):'')+
-                '</div>');
+                '<div id="'+this.fieldViewId(f.id)+'" class="disabled evo-rdonly evol-ellipsis">');
+            if(f.formula && this.model){
+                h.push(f.formula(this.model));
+            }
+            h.push('</div>');
         }else{
             h.push(eDico.fieldHTML(f, this.fieldViewId(f.id), fv, mode, iconsPath, skipLabel));
         }
@@ -733,7 +734,7 @@ return Backbone.View.extend({
             var selector=this.titleSelector;
             if(selector && selector!==''){
                 var t,
-                    lf=this.uiModel.leadfield;
+                    lf=this.uiModel.fnTitle;
                 if(title){
                     t=title;
                 }else if((!_.isUndefined(lf)) && lf!==''){
@@ -877,10 +878,10 @@ return Backbone.View.extend({
                 }
 
                 // Check regexp
-                if (f.regex !== null && !_.isUndefined(f.regex)) {
-                    var rg = new RegExp(f.regex);
+                if (f.regExp !== null && !_.isUndefined(f.regExp)) {
+                    var rg = new RegExp(f.regExp);
                     if (!v.match(rg)) {
-                        return formatMsg(f.label, i18nVal.regex, f.label);
+                        return formatMsg(f.label, i18nVal.regExp, f.label);
                     }
                 }
 
@@ -898,25 +899,25 @@ return Backbone.View.extend({
             }
 
             // Check custom validation
-            if (f.customvalidation) {
-                var fValid = f.customvalidation(f, v);
+            if (f.fnValidate) {
+                var fValid = f.fnValidate(f, v);
                 if (fValid !== '') {
                     return formatMsg(f.label, fValid);
                 }
             }
 
-            // Check minlength and maxlength
+            // Check minLength and maxLength
             if (_.isString(v)) {
                 var len = v.length,
-                    badMax = f.maxlength?len > f.maxlength:false,
-                    badMin = f.minlength?len < f.minlength:false;
+                    badMax = f.maxLength?len > f.maxLength:false,
+                    badMin = f.minLength?len < f.minLength:false;
                 if(badMax || badMin){
-                    if(f.maxlength && f.minlength){
-                        return formatMsg(f.label, i18nVal.minmaxlength, f.minlength, f.maxlength);
-                    }else if(f.maxlength){
-                        return formatMsg(f.label, i18nVal.maxlength, f.maxlength);
+                    if(f.maxLength && f.minLength){
+                        return formatMsg(f.label, i18nVal.minMaxLength, f.minLength, f.maxLength);
+                    }else if(f.maxLength){
+                        return formatMsg(f.label, i18nVal.maxLength, f.maxLength);
                     }else{
-                        return formatMsg(f.label, i18nVal.minlength, f.minlength);
+                        return formatMsg(f.label, i18nVal.minLength, f.minLength);
                     }
                 }
             }
@@ -1134,16 +1135,16 @@ return Backbone.View.extend({
         evt.stopImmediatePropagation();
         if(bId==='bPlus'){
             // - Add row to details
-            var h=[],
+            var h='',
                 subCollecs=this.getSubCollecs(),
                 mid=tr.closest('table').data('mid'),
                 elems=(subCollecs[mid])?subCollecs[mid].elements:null;
-            h.push('<tr>');
-            this._TDsFieldsEdit(h, elems, {});
-            h.push('<td class="evo-td-plusminus">'+
+            h+='<tr>'+
+                this._TDsFieldsEdit(elems, {})+
+                '<td class="evo-td-plusminus">'+
                 eUI.buttonsPlusMinus()+
-                '</td></tr>');
-            $(h.join('')).insertAfter(tr);
+                '</td></tr>';
+            $(h).insertAfter(tr);
             if(tr.data('id')==='nodata'){
                 tr.remove();
             }

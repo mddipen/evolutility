@@ -28,9 +28,9 @@ uiModels.entity = {
     id: 'entity',
     label: 'Object',
     icon: "cube.gif",
-    entity: "object",
-    entities: "objects",
-    leadfield: "title",
+    name: "object",
+    namePlural: "objects",
+    fnTitle: "title",
     elements: [
         {
             type: 'panel',
@@ -44,8 +44,8 @@ uiModels.entity = {
                     type: "text",
                     id: "title",
                     attribute: "title",
-                    maxlength: 100,
-                    viewmany: true,
+                    maxLength: 100,
+                    inMany: true,
                     width: 52,
                     required: true
                 },
@@ -54,8 +54,8 @@ uiModels.entity = {
                     type: "text",
                     id: "id",
                     attribute: "id",
-                    maxlength: 20,
-                    viewmany: true,
+                    maxLength: 20,
+                    inMany: true,
                     width: 18
                 },
                 {
@@ -63,7 +63,7 @@ uiModels.entity = {
                     type: "boolean",
                     id: "PUBLISH",
                     attribute: "PUBLISH",
-                    viewmany: true,
+                    inMany: true,
                     width: 20
                 }
             ]
@@ -82,21 +82,21 @@ uiModels.entity = {
                             label: "Object name",
                             help: "example: 'contact'",
                             type: "text",
-                            id: "entity",
-                            attribute: "entity",
+                            id: "name",
+                            attribute: "name",
                             required: true,
-                            maxlength: 50,
-                            viewmany: true,
+                            maxLength: 50,
+                            inMany: true,
                             width: 62
                         },
                         {
                             label: "name (plural)",
                             help: "example: 'contacts'",
                             type: "text",
-                            id: "entities",
-                            attribute: "entities",
+                            id: "namePlural",
+                            attribute: "namePlural",
                             required: true,
-                            maxlength: 50,
+                            maxLength: 50,
                             width: 38
                         },
                         {
@@ -104,7 +104,7 @@ uiModels.entity = {
                             type: "text",
                             id: "icon",
                             attribute: "icon",
-                            maxlength: "50",
+                            maxLength: "50",
                             width: 62,
                             help: "example='contact.gif'"
                         },
@@ -121,7 +121,7 @@ uiModels.entity = {
                             type: "textmultiline",
                             id: "description",
                             attribute: "description",
-                            maxlength: 250,
+                            maxLength: 250,
                             width: 100,
                             height: 4
                         }
@@ -146,8 +146,8 @@ uiModels.entity = {
                             type: "text",
                             id: "attribute",
                             attribute: "attribute",
-                            maxlength: 100,
-                            viewmany:true,
+                            maxLength: 100,
+                            inMany:true,
                             //"link": "EvoDicoField.aspx?ID=@itemid",
                             required: true
                         },
@@ -156,8 +156,8 @@ uiModels.entity = {
                             type: "text",
                             id: "label",
                             attribute: "label",
-                            maxlength: 100,
-                            viewmany:true,
+                            maxLength: 100,
+                            inMany:true,
                             required: true
                         },
                         {
@@ -173,8 +173,8 @@ uiModels.entity = {
                             label: "In List",
                             help: "Field shows as header field for lists",
                             type: "boolean",
-                            id: "viewmany",
-                            attribute: "viewmany",
+                            id: "inMany",
+                            attribute: "inMany",
                             width: 50,
                             "img": "checkg.gif"
                         },
@@ -189,9 +189,9 @@ uiModels.entity = {
                             label: "Max length",
                             help: "Integer (gaps OK)",
                             type: "integer",
-                            id: "maxlength",
-                            attribute: "maxlength",
-                            maxlength: 3,
+                            id: "maxLength",
+                            attribute: "maxLength",
+                            maxLength: 3,
                             width: 38
                         },
                         {
@@ -201,7 +201,7 @@ uiModels.entity = {
                             "format": "0 '%'",
                             id: "width",
                             attribute: "width",
-                            maxlength: 3,
+                            maxLength: 3,
                             width: 62
                         },
                         {
@@ -210,7 +210,7 @@ uiModels.entity = {
                             type: "integer",
                             id: "height",
                             attribute: "height",
-                            maxlength: "3",
+                            maxLength: "3",
                             width: 38
                         }
                     ]

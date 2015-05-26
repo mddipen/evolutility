@@ -27,9 +27,9 @@ var uiModels=uiModels||{};
 uiModels.field = {
     id:'field',
     icon: "edi_fld.png",
-    entity: "field",
-    entities: "fields",
-    leadfield: 'label',
+    name: "field",
+    namePlural: "fields",
+    fnTitle: 'label',
     elements: [
         {
             type: "panel",
@@ -41,9 +41,9 @@ uiModels.field = {
                     label: "Label",
                     type: "text",
                     help: "Field title for the user",
-                    maxlength: 100,
+                    maxLength: 100,
                     required: true,
-                    viewmany: true,
+                    inMany: true,
                     width: 62
                 },
                 {
@@ -52,9 +52,9 @@ uiModels.field = {
                     help: "Type of field: UI type rather than data type.",
                     type: "lov",
                     list:uiFieldTypes,
-                    maxlength: 100,
+                    maxLength: 100,
                     required: true,
-                    viewmany: true,
+                    inMany: true,
                     width: 38
                 },
                 {
@@ -63,16 +63,16 @@ uiModels.field = {
                     help: "Attribute name in the Backbone model",
                     required: true,
                     type: "text",
-                    maxlength: 100,
+                    maxLength: 100,
                     width: 62
                 },
                 {
-                    id: 'colpix',
+                    id: 'eid',
                     label: "ID",
                     labellist: "ID",
                     type: "text",
                     help: 'Field ID in the DOM = prefix + ID',
-                    maxlength: 100,
+                    maxLength: 100,
                     width: 38
                 },
                 {
@@ -80,8 +80,53 @@ uiModels.field = {
                     label: "Format",
                     type: "text",
                     help: "example '$ 0.00'",
-                    maxlength: 30,
+                    maxLength: 30,
+                    width: 100
+                }
+            ]
+        },
+        {
+            type: "panel",
+            label: "Layout",
+            width: 38,
+            elements: [
+                {
+                    id:'position',
+                    label: "Position",
+                    help: "Integer (do not have to be consecutive)",
+                    type: "integer",
+                    maxLength: 3,
                     width: 62
+                },
+                {
+                    id:'inMany',
+                    label: "List",
+                    help: "Field shows in lists",
+                    labellist: "List",
+                    type: "boolean",
+                    inMany: true,
+                    width: 38
+                },
+                {
+                    id:'width',
+                    label: "Width",
+                    defaultValue: 100,
+                    help: "Relative width of the field (in percentage)",
+                    type: "integer",
+                    format: "0 '%'",
+                    maxLength: 3,
+                    width: 62
+                },
+                {
+                    id:'height',
+                    attribute:'height',
+                    label: "Height",
+                    help: "Height in number of lines (for ''Textmultiline'' fields)",
+                    type: "integer",
+                    maxLength: 3,
+                    defaultValue: 1,
+                    max:30,
+                    width: 38
                 },
                 {
                     id: 'css',
@@ -89,48 +134,48 @@ uiModels.field = {
                     labellist: "CSS Edit",
                     help: "Stylesheet class name for the field for the edit view.",
                     type: "text",
-                    maxlength: 20,
-                    width: 38
+                    maxLength: 20,
+                    width: 100
                 }
             ]
         },
         {
             type: "panel",
             label: "Validation",
-            width: 38,
+            width: 62,
             elements: [
                 {
                     id:'required',
                     label: "Required",
-                    //defaultvalue: false,
+                    //defaultValue: false,
                     help: "Mandatory field",
                     type: "boolean",
-                    viewmany: true,
+                    inMany: true,
                     width: 50,
                     img: "checkr.gif"
                 },
                 {
                     id:'readonly',
                     label: "Read only",
-                    defaultvalue:false,
+                    defaultValue:false,
                     help: "Users can view this field value but cannot modify it",
                     type: "boolean",
                     width: 50,
                     img: "checkr.gif"
                 },
                 {
-                    id:'minlength',
+                    id:'minLength',
                     label: "Min. length",
                     help: "Minimum number of characters required",
                     type: "integer",
                     width: 50
                 },
                 {
-                    id:'maxlength',
+                    id:'maxLength',
                     label: "Max. length",
                     help: "Maximum number of characters allowed",
                     type: "integer",
-                    maxlength: 7,
+                    maxLength: 7,
                     width: 50
                 },
                 {
@@ -142,7 +187,7 @@ uiModels.field = {
                      }],*/
                     labellist: "Min.",
                     type: "integer",
-                    maxlength: 4,
+                    maxLength: 4,
                     width: 50
                 },
                 {
@@ -154,62 +199,25 @@ uiModels.field = {
                     }],*/
                     labellist: "Max.",
                     type: "integer",
-                    maxlength: 4,
+                    maxLength: 4,
                     width: 50
-                }/*,
+                },
                 {
-                    id:'regex',
+                    id:'regExp',
                     label: "Regular Expression",
                     labellist: "RegExp",
-                    type: "integer",
-                    maxlength: 100,
-                    width: 100,
+                    type: "text",
+                    maxLength: 100,
+                    width: 50,
                     help: 'Regular expression used to validate the field value.'
-                }*/
-            ]
-        },
-        {
-            type: "panel",
-            label: "Layout",
-            width: 62,
-            elements: [
-                {
-                    id:'position',
-                    label: "Position",
-                    help: "Integer (do not have to be consecutive)",
-                    type: "integer",
-                    maxlength: 3,
-                    width: 62
                 },
                 {
-                    id:'viewmany',
-                    label: "List",
-                    help: "Field shows in lists",
-                    labellist: "List",
-                    type: "boolean",
-                    viewmany: true,
-                    width: 38
-                },
-                {
-                    id:'height',
-                    attribute:'height',
-                    label: "Height",
-                    help: "Height in number of lines (for ''Textmultiline'' fields)",
-                    type: "integer",
-                    maxlength: 3,
-                    defaultvalue: 1,
-                    max:30,
-                    width: 62
-                },
-                {
-                    id:'width',
-                    label: "Width",
-                    defaultvalue: 100,
-                    help: "Relative width of the field (in percentage)",
-                    type: "integer",
-                    format: "0 '%'",
-                    maxlength: 3,
-                    width: 38
+                    id:'fnValidate',
+                    label: "Custom Validation Method",
+                    type: "text",
+                    maxLength: 100,
+                    width: 50,
+                    help: 'Name of Javascript function for validating the data.'
                 }
             ]
         },
@@ -224,9 +232,9 @@ uiModels.field = {
                     label: "Help",
                     help: "Help on the field for edition",
                     type: "textmultiline",
-                    maxlength: 500,
+                    maxLength: 500,
                     width: 100,
-                    height: 4
+                    height: 8
                 }
             ]
         }

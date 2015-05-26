@@ -19,9 +19,13 @@
     -webkit-box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.25);
   }
 }
-.pixEvoView{
-  margin: 20px 0;
+.pixEvoView, .pixEvoPos{
+  margin: 10px 0 10px 20px;
 }
+.pixEvoPos img{
+  width: 250px;
+}
+
 .evo-content3{
   >p>img{
     width:500px;
@@ -42,6 +46,9 @@
 .evo-links-views {
   > div{
     margin: 4px 0 10px 20px;
+  }
+  >li{
+    margin: 5px 0 10px;
   }
   a > i{
     margin:5px;
@@ -125,4 +132,34 @@ code{
   >section{
     margin:20px 0 30px;
   }
+}
+
+.links-bh,
+.links-bih{ 
+  a {
+    margin: 10px 5px;
+    padding: 5px;
+    border-radius: 5px;
+    &:hover{
+      background-color: #E3F2FD;
+      text-decoration: none;
+    }
+    >img {
+      position: relative;
+      top:-2px;
+    }
+  }
+}
+.links-bih a {
+  padding: 5px 10px 3px 5px;
+}
+
+.t-props{
+  tr td:first-child{
+    width:140px;
+    font-weight: 600;
+  }
+}
+.t-row{
+  background-color: #E3F2FD;
 }

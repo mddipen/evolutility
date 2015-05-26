@@ -3,10 +3,10 @@ var uiModels = uiModels || {};
 uiModels.todo = {
     id: 'todo',
     label: 'To Do',
-    entity: 'task',
-    entities: 'tasks',
+    name: 'task',
+    namePlural: 'tasks',
     icon: 'todo.gif',
-    leadfield:'title',
+    fnTitle:'title',
     elements: [
         {
             type: 'panel', label: 'Task', width: 62,
@@ -14,14 +14,14 @@ uiModels.todo = {
                 {
                     id: 'title', attribute: 'title', type: 'text', label: 'Title', required: true,
                     //placeholder: 'Call John',
-                    maxlength: 255,
-                    width: 100, viewmany: true
+                    maxLength: 255,
+                    width: 100, inMany: true
                 },
                 {
-                    id: 'duedate', attribute: 'duedate', type: 'date', label: 'Due Date', width: 62, viewmany: true
+                    id: 'duedate', attribute: 'duedate', type: 'date', label: 'Due Date', width: 62, inMany: true
                 },
                 {
-                    id: 'category', attribute: 'category', type: 'lov', label: 'Category', width: 38, viewmany: true,
+                    id: 'category', attribute: 'category', type: 'lov', label: 'Category', width: 38, inMany: true,
                     list: [
                         {id: 'home', text: 'Home'},
                         {id: 'work', text: 'Work'},
@@ -29,7 +29,7 @@ uiModels.todo = {
                         {id: 'others', text: 'Others'},
                         {id: 'misc', text: 'Misc.'}
                     ],
-                    typechart:'bars'
+                    typeChart:'bars'
                 }
             ]
         },
@@ -38,7 +38,7 @@ uiModels.todo = {
             elements: [
                 {
                     id: 'priority', attribute: 'priority', type: 'lov', label: 'Priority', required: true,
-                    width: 100,  viewmany: true,
+                    width: 100,  inMany: true,
                     list: [
                         {id: '1', text: '1 - ASAP'},
                         {id: '2', text: '2 - Urgent'},
@@ -48,10 +48,10 @@ uiModels.todo = {
                     ]
                 },
                 {
-                    id: 'complete', attribute: 'complete', type: 'boolean', width: 100, viewmany: true,
+                    id: 'complete', attribute: 'complete', type: 'boolean', width: 100, inMany: true,
                     label: 'Complete', 
-                    labelcharts:'Tasks completion', labeltrue: 'Complete', labelfalse:'Incomplete',
-                    typechart:'pie'
+                    labelCharts:'Tasks completion', labelTrue: 'Complete', labelFalse:'Incomplete',
+                    typeChart:'pie'
                 }
             ]
         },
@@ -61,12 +61,12 @@ uiModels.todo = {
                 {
                     id: 'description', attribute: 'description', type: 'textmultiline', 
                     label: 'Description', 
-                    maxlength: 1000,
-                    width: 62, height: 5, viewmany: false
+                    maxLength: 1000,
+                    width: 62, height: 5, inMany: false
                 },
                 {
-                    id: 'notes', attribute: 'notes', type: 'textmultiline', label: 'Notes', maxlength: 1000,
-                    width: 38, height: 5, viewmany: false
+                    id: 'notes', attribute: 'notes', type: 'textmultiline', label: 'Notes', maxLength: 1000,
+                    width: 38, height: 5, inMany: false
                 }
             ]
         }

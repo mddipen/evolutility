@@ -33,7 +33,8 @@ Evol.Dico = function(){
             formula:'formula', // soon to be a field attribute rather than a field type
             email: 'email',
             pix: 'image',
-            doc:'document',
+            //geoloc: 'geolocation',
+            //doc:'document',
             url: 'url',
             color: 'color',
             hidden: 'hidden'
@@ -150,8 +151,7 @@ return {
                     h+='<div id="'+fid+'" class="form-control evol-ellipsis">'+fld.formula()+'</div>';
                     break;
                 case fts.color: // TODO is the color switch necessary?
-                    //h+=uiInput.colorBox(fid, fv)+fv;
-                    h+='<div id="'+fid+'" class="form-control">'+fv+'</div>';
+                    h+='<div id="'+fid+'" class="form-control">'+uiInput.colorBox(fid, fv)+'</div>';
                     break;
                 default:
                     h+=this.fieldHTML_ReadOny(fld, fv, {}, iconsPath);
@@ -223,7 +223,7 @@ return {
     },
 
     HTMLFieldLabel: function (fld, mode) {
-        var h='<div class="evol-field-label" id="'+fld.id+'-lbl"><label class="control-label '+(fld.csslabel?fld.csslabel:'')+'" for="'+fld.id+'">'+fld.label;
+        var h='<div class="evol-field-label" id="'+fld.id+'-lbl"><label class="control-label '+(fld.cssLabel?fld.cssLabel:'')+'" for="'+fld.id+'">'+fld.label;
         if (mode != 'browse' && fld.required){
             h+=eUI.html.required;
         }
@@ -334,7 +334,7 @@ return {
     },
 
     fieldInCharts: function (f) {
-        return (_.isUndefined(f.viewcharts) || f.viewcharts) && Evol.Dico.fieldChartable(f);
+        return (_.isUndefined(f.inCharts) || f.inCharts) && Evol.Dico.fieldChartable(f);
     },
     fieldChartable: function (f) {
         return  f.type===fts.lov || f.type===fts.bool || f.type===fts.int || f.type===fts.money;
@@ -500,7 +500,38 @@ return {
 
          return this;
      },
+
+    uiModel2tdbTable: function(uiModel){
+        // -- generates SQL script to create a Postgress DB table for the object
+        var t=uiModel.id || uiModel.name;
+        var fields=this.getFields(uiModel);
+        var sql='CREATE TABLE "Evolutility".'+t;
+        sql+='\n(\n';
+        sql+=[' id serial NOT NULL,\n'];
+        _.forEach(fields, function(f, idx){
+            sql+=' "'+(f.attribute || f.id)+'" ';
+            switch(f.type){
+                case 'boolean':
+                case 'integer':
+                    sql+=f.type;
+                    break;
+                case 'date':
+                case 'datetime':
+                case 'time': 
+                    sql+='date';
+                    break;
+                default:
+                    sql+='text';
+            }
+            sql+=',\n';
+        });
+        sql+='CONSTRAINT "'+t+'_pkey" PRIMARY KEY (id)';
+        sql+='\n) WITH (OIDS=FALSE);';
+
+        return sql;
+    },
 */
+
     filterModels: function(models, filters){
         if(filters.length){
             // TODO pre-build function to avoid repeating loop
