@@ -22,7 +22,15 @@
         <li class="evo-link2">
             <ul class="evo-head-links2">
                 <li><a href="views.html">views</a></li>
-                <li><a class="sel" href="ui-model.html">ui-model</a></li>
+                <li><a class="sel" href="ui-model.html">ui-model</a>
+                    <ul>
+                        <li><a href="#object">object</a></li>
+                        <li><a href="#field">field</a></li>
+                        <li><a href="#panel">panel</a></li>
+                        <li><a href="#panel-list">panel-list</a></li>
+                        <li><a href="#tab">tab</a></li>
+                    </ul>
+                </li>
                 <li><a href="controller.html">controller</a></li>
             </ul>
         </li>
@@ -149,6 +157,14 @@
         <td>icon
         </td>
         <td>Filename of the records icon (same one for all records).
+            <br />
+            Example: <code>icon</code> =&quot;todo.png&quot;
+        </td>
+    </tr>
+    <tr>
+        <td>fnIcon <span class="evol-asterix">*</span>
+        </td>
+        <td>Function which returns an icon path. Useful when you want different icons for different records based on some field value or calculation.
             <br />
             Example: <code>icon</code> =&quot;todo.png&quot;
         </td>
@@ -300,7 +316,7 @@
             </td>
         </tr>
         <tr>
-            <td>imgEmpty
+            <td>imgEmpty <span class="evol-asterix">*</span>
             </td>
             <td>Image to display when the value (path to the picture) is empty or doesn't lead to a valid image (for fields of type &quot;image&quot;).
             </td>
@@ -417,6 +433,12 @@
             <td>sortable
             </td>
             <td>Column can be sorted by the field value (in "List" view).
+            </td>
+        </tr>
+        <tr>
+            <td>groupable, colorable, sizable
+            </td>
+            <td>Field can be used for grouping/coloring/sizing bubbles (in "Bubble" view).
             </td>
         </tr>
         <tr>
