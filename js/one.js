@@ -63,7 +63,7 @@ return Backbone.View.extend({
         this.$el.html(h.join(''));
         this.custOn=false;
         this.postRender();
-        this.setData(this.model, true); // TODO remove it
+        this.setData(this.model, true);
         return this;
     },
 
@@ -509,7 +509,7 @@ return Backbone.View.extend({
 
     _renderButtons: function (h, mode) {
         h.push(eUI.html.clearer+
-            '<div class="evol-buttons panel '+this.options.style+'">'+
+            '<div class="evol-buttons panel '+this.style+'">'+
             eUI.button('cancel', i18n.bCancel, 'btn-default')+
             eUI.button('save', i18n.bSave, 'btn-primary'));
         if (this.model && this.model.isNew() && this.button_addAnother && mode!=='json') {
@@ -969,6 +969,9 @@ return Backbone.View.extend({
 
         if(fld && fld.help){
             $f=$el.closest('.evol-fld');
+            if(this.viewName==='mini'){
+                $f=$f.find('.evol-mini-content');
+            }
             $fh=forceOn?[]:$f.find('.help-block');
             if($fh.length>0){
                 $fh.slideUp(200, function(){

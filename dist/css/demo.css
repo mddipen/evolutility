@@ -18,6 +18,11 @@
 .evo-logo > a > span {
   color: white;
 }
+@media print {
+  .evo-logo a[href]:after {
+    content: none !important;
+  }
+}
 .logop1,
 .logop3 {
   font-weight: bold;
@@ -84,6 +89,12 @@
 .evo-head-links > li > a.sel,
 .evo-head-links2 > li > a.sel {
   color: white;
+}
+@media print {
+  .evo-head-links,
+  .evo-head-links2 {
+    display: none;
+  }
 }
 .evo-link2 li li {
   margin-left: -12px;
@@ -344,10 +355,6 @@ a {
 .mt20 {
   margin-top: 20px;
 }
-.evo-title > h1,
-.evo-title2 > h1 {
-  color: white !important;
-}
 #evol-views-params {
   margin: 20px 0;
   min-height: 100px;
@@ -364,6 +371,12 @@ a {
   .hideIfSmall {
     display: none;
   }
+}
+.demo-controls {
+  padding: 10px;
+  border: 2px solid #FFECB3;
+  border-radius: 4px;
+  background-color: #FFF8E1;
 }
 #viewInfo {
   margin: 10px 0;
