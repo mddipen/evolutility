@@ -259,11 +259,10 @@ img.pixEvoPos {
   margin-right: 4px;
 }
 code {
-  margin: 5px 0;
+  display: block;
   padding: 10px;
   overflow: auto;
   font-size: 85%;
-  line-height: 1.45;
   background-color: #f7f7f7;
   border-radius: 3px;
 }
@@ -333,6 +332,9 @@ code {
 }
 .links-bih a {
   padding: 5px 10px 3px 5px;
+}
+.mt10 {
+  margin-top: 10px;
 }
 .t-props tr td:first-child {
   width: 140px;

@@ -42,9 +42,14 @@ Evol.UI = {
     // --- input fields ---
     input: {
 
+        formula: function (id, f , model) {
+            return '<div type="text" id="'+id+'" class="disabled evo-rdonly evol-ellipsis">'+
+                        (f.formula?f.formula(model):'')+
+                    '</div>';
+        },
         text: function (id, value, fd, css) {
             var h = '<input type="text" id="'+id;
-            if(value.indexOf('"')>-1){
+            if(value && value.indexOf('"')>-1){
                 value=value.replace(/"/g,'\"');
             }
             h+='" value="'+value;
@@ -2471,6 +2476,8 @@ Evol.ViewMany.List = Evol.ViewMany.extend({
         _.each(fields, function(f, idx){
             if(f.type===ft.color){
                 v = Evol.UI.input.colorBox(f.id, model.escape(f.attribute || f.id));
+            }else if(f.type===ft.formula){
+                v = Evol.UI.input.formula(f.id, f, model);
             }else if(f.value){
                 v = f.value(model);
             }else{
@@ -2876,6 +2883,7 @@ return Backbone.View.extend({
             defaultVal;
 
         this.clearMessages();
+        //this.setData(new Backbone.Model());
         _.each(this.getFields(), function (f) {
             $f = that.$field(f.id);
             defaultVal = f.defaultValue || '';
@@ -3238,11 +3246,7 @@ return Backbone.View.extend({
         }
         if(f.type==='formula'){
             h.push(Evol.Dico.HTMLFieldLabel(f, mode || 'edit')+
-                '<div id="'+this.fieldViewId(f.id)+'" class="disabled evo-rdonly evol-ellipsis">');
-            if(f.formula && this.model){
-                h.push(f.formula(this.model));
-            }
-            h.push('</div>');
+                Evol.UI.input.formula(this.fieldViewId(f.id), this.model));
         }else{
             h.push(eDico.fieldHTML(f, this.fieldViewId(f.id), fv, mode, iconsPath, skipLabel));
         }
@@ -5213,7 +5217,7 @@ Evol.viewClasses = {
 };
 
 // toolbar widget which also acts as a controller for all views "one" and "many" as well as actions
-Evol.ViewToolbar = function() {
+Evol.Toolbar = function() {
 
     var eUI = Evol.UI,
         i18n = Evol.i18n;
@@ -6217,7 +6221,7 @@ Evol.App = Backbone.View.extend({
     },
 
     options: {
-        //uiModelsObj: {},
+        //uiModels: [],
         elements:{
             nav: '.evo-head-links',
             nav2: '.evo-head-links2',
@@ -6231,7 +6235,11 @@ Evol.App = Backbone.View.extend({
 
     initialize: function (opts) {
         _.extend(this, this.options, opts);
-        this.uiModels = _.flatten(this.uiModelsObj);
+        var uims = {};
+        _.forEach(this.uiModels, function(uim, idx){
+            uims[uim.id||'uim'+idx] = uim;
+        });
+        this.uiModelsObj = uims;
         this._tbs={};
         this._ents={};
         var es = this.elements;
@@ -6250,7 +6258,7 @@ Evol.App = Backbone.View.extend({
 
     setupRouter: function(){
         var that=this,
-            EvolRouter=Backbone.Router.extend ({
+            EvolRouter = Backbone.Router.extend ({
                 routes: {
                     '' : 'nav',
                     //':entity/:view/:id': 'nav',
@@ -6388,7 +6396,7 @@ Evol.App = Backbone.View.extend({
                 if(that.useRouter){
                     config.router = that.router;
                 }
-                var tb = new Evol.ViewToolbar(config).render();//.setTitle();
+                var tb = new Evol.Toolbar(config).render();//.setTitle();
                 if(options && tb.cardinality==='1'){
                     tb.setModelById(options);
                 }
